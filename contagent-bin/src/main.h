@@ -1,0 +1,16 @@
+//
+// Created by rober on 22/02/2024.
+//
+
+#ifndef CONTAGENT_MAIN_H
+#define CONTAGENT_MAIN_H
+
+#include <memory>
+#include "contagent/contagent.h"
+
+using namespace contagent;
+
+int main(int argc, char* argv[]);
+std::unique_ptr<Configuration> make_configuration();
+
+#endif // CONTAGENT_MAIN_H
