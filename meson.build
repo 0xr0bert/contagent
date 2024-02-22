@@ -1,0 +1,18 @@
+project('contagent', 'cpp',
+        version : '1.0.0',
+        default_options : ['warning_level=3', 'cpp_std=c++20'])
+
+subdir('contagent-lib')
+
+boost_dep = dependency('boost')
+contagent_lib = shared_library(
+        'contagent',
+        lib_sources,
+        include_directories : incdir,
+        dependencies : boost_dep
+)
+
+subdir('contagent-bin')
+contagent_bin = executable('contagentsim', bin_sources, install : true, include_directories : incdir, link_with : contagent_lib)
+
+test('test', contagent_bin)

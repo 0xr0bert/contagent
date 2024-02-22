@@ -1,0 +1,1 @@
+bin_sources = files('main.cc')
