@@ -13,9 +13,9 @@ Agent::Agent(const uint_fast32_t n_days, boost::uuids::uuid uuid)
 
 Agent::Agent(const uint_fast32_t n_days) {
   initialize(n_days);
-};
+}
 
-const std::map<std::shared_ptr<Belief>, double_t>&
+[[maybe_unused]] const std::map<std::shared_ptr<Belief>, double_t>&
 Agent::getActivationsForDay(const std::size_t day) {
   return activations_[day];
 }
@@ -34,13 +34,13 @@ Agent::Agent(
   initialize(n_days);
 }
 
-const std::map<std::weak_ptr<Agent>, double_t, std::owner_less<>>&
+[[maybe_unused]] const std::map<std::weak_ptr<Agent>, double_t, std::owner_less<>>&
 
 Agent::getFriends() const {
   return friends_;
 }
 
-void Agent::setFriends(
+[[maybe_unused]] void Agent::setFriends(
     std::map<std::weak_ptr<Agent>, double_t, std::owner_less<>> friends) {
   friends_ = std::move(friends);
 }
@@ -50,16 +50,16 @@ const std::vector<std::shared_ptr<Behaviour>>& Agent::getActions()
   return actions_;
 }
 
-void Agent::setActions(std::vector<std::shared_ptr<Behaviour>> actions) {
+[[maybe_unused]] void Agent::setActions(std::vector<std::shared_ptr<Behaviour>> actions) {
   actions_ = std::move(actions);
 }
 
-const std::unordered_map<std::shared_ptr<Belief>, double_t>&
+[[maybe_unused]] const std::unordered_map<std::shared_ptr<Belief>, double_t>&
 Agent::getDeltas() const {
   return deltas_;
 }
 
-void Agent::setDeltas(
+[[maybe_unused]] void Agent::setDeltas(
     std::unordered_map<std::shared_ptr<Belief>, double_t> deltas) {
   deltas_ = std::move(deltas);
 }
@@ -92,7 +92,7 @@ double_t Agent::contextualize(
       context += weightedRelationship(sim_time, b, b2);
     }
 
-    return context / size;
+    return context / size; // NOLINT(*-narrowing-conversions)
   }
 }
 std::unique_ptr<std::unordered_map<std::shared_ptr<Behaviour>, double_t>>
@@ -125,7 +125,7 @@ double_t Agent::pressure(
       pressure += b->getPerceptions().at(behaviour) * w;
     }
 
-    return pressure / size;
+    return pressure / size; // NOLINT(*-narrowing-conversions)
   }
 }
 double_t Agent::activationChange(
@@ -172,13 +172,13 @@ void Agent::updateActivationsForAllBeliefs(
     updateActivation(sim_time, belief, beliefs, *actions_of_friends);
   }
 }
-const std::unordered_map<
+[[maybe_unused]] const std::unordered_map<
     std::shared_ptr<Belief>,
     std::unordered_map<std::shared_ptr<Behaviour>, double_t>>&
 Agent::getPerformanceRelationships() const {
   return performance_relationships_;
 }
-void Agent::setPerformanceRelationships(
+[[maybe_unused]] void Agent::setPerformanceRelationships(
     std::unordered_map<std::shared_ptr<Belief>,
                        std::unordered_map<std::shared_ptr<Behaviour>, double_t>>
         performanceRelationships) {

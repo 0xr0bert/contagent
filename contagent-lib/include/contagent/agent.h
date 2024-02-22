@@ -20,29 +20,29 @@ class Agent : public UUIDd {
 
   explicit Agent(uint_fast32_t n_days);
 
-  [[nodiscard]] const std::map<std::shared_ptr<Belief>, double_t>&
+  [[maybe_unused]] [[nodiscard]] const std::map<std::shared_ptr<Belief>, double_t>&
   getActivationsForDay(std::size_t day);
 
-  [[nodiscard]] const std::map<std::weak_ptr<Agent>, double_t,
+  [[maybe_unused]] [[nodiscard]] const std::map<std::weak_ptr<Agent>, double_t,
                                std::owner_less<>>&
   getFriends() const;
-  void setFriends(
+  [[maybe_unused]] void setFriends(
       std::map<std::weak_ptr<Agent>, double_t, std::owner_less<>> friends);
 
   [[nodiscard]] const std::vector<std::shared_ptr<Behaviour>>& getActions()
       const;
-  void setActions(std::vector<std::shared_ptr<Behaviour>> actions);
+  [[maybe_unused]] void setActions(std::vector<std::shared_ptr<Behaviour>> actions);
 
-  [[nodiscard]] const std::unordered_map<std::shared_ptr<Belief>, double_t>&
+  [[maybe_unused]] [[nodiscard]] const std::unordered_map<std::shared_ptr<Belief>, double_t>&
   getDeltas() const;
-  void setDeltas(std::unordered_map<std::shared_ptr<Belief>, double_t> deltas);
+  [[maybe_unused]] void setDeltas(std::unordered_map<std::shared_ptr<Belief>, double_t> deltas);
 
-  [[nodiscard]] const std::unordered_map<
+  [[maybe_unused]] [[nodiscard]] const std::unordered_map<
       std::shared_ptr<Belief>,
       std::unordered_map<std::shared_ptr<Behaviour>, double_t>>&
   getPerformanceRelationships() const;
 
-  void setPerformanceRelationships(
+  [[maybe_unused]] void setPerformanceRelationships(
       std::unordered_map<
           std::shared_ptr<Belief>,
           std::unordered_map<std::shared_ptr<Behaviour>, double_t>>

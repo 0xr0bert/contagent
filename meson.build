@@ -5,16 +5,17 @@ project('contagent', 'cpp',
 subdir('contagent-lib')
 
 boost_dep = dependency('boost')
+glog_dep = dependency('glog')
 contagent_lib = shared_library(
         'contagent',
         lib_sources,
         include_directories : incdir,
-        dependencies : boost_dep
+        dependencies : [boost_dep, glog_dep]
 )
 
 clipp_dir = include_directories('libs/clipp/include')
 
 subdir('contagent-bin')
-contagent_bin = executable('contagentsim', bin_sources, install : true, include_directories : [incdir, clipp_dir], link_with : contagent_lib)
+contagent_bin = executable('contagentsim', bin_sources, install : true, include_directories : [incdir, clipp_dir], link_with : contagent_lib, dependencies : glog_dep)
 
 test('test', contagent_bin)

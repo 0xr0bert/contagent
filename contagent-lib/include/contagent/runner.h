@@ -3,15 +3,11 @@
 
 #include <memory>
 
-
 #include "configuration.h"
 namespace contagent {
 class Runner {
  public:
   explicit Runner(std::unique_ptr<Configuration> configuration);
-
- private:
-  std::unique_ptr<Configuration> configuration_;
 
   void perceiveBeliefs(uint_fast32_t time);
 
@@ -22,6 +18,9 @@ class Runner {
   void tickBetween(uint_fast32_t start_time, uint_fast32_t end_time);
 
   void run();
+
+ private:
+  std::unique_ptr<Configuration> configuration_;
 };
 }
 
