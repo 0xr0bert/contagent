@@ -12,7 +12,9 @@ contagent_lib = shared_library(
         dependencies : boost_dep
 )
 
+clipp_dir = include_directories('libs/clipp/include')
+
 subdir('contagent-bin')
-contagent_bin = executable('contagentsim', bin_sources, install : true, include_directories : incdir, link_with : contagent_lib)
+contagent_bin = executable('contagentsim', bin_sources, install : true, include_directories : [incdir, clipp_dir], link_with : contagent_lib)
 
 test('test', contagent_bin)
