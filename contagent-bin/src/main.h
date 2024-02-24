@@ -13,4 +13,6 @@ using namespace contagent;
 int main(int argc, char* argv[]);
 std::unique_ptr<Configuration> make_configuration(uint_fast32_t start_time, uint_fast32_t end_time);
 
+std::vector<std::unique_ptr<Behaviour>> load_behaviours(const std::string& file_path);
+
 #endif // CONTAGENT_MAIN_H

@@ -5,5 +5,6 @@ lib_sources = files(
     'configuration.cc',
     'named.cc',
     'runner.cc',
-    'uuidd.cc'
+    'uuidd.cc',
+    'json/behaviour_spec.cc'
 )

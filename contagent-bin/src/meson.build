@@ -1,1 +1,3 @@
-bin_sources = files('main.cc')
+bin_sources = files(
+    'main.cc'
+)
