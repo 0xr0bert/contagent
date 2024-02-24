@@ -20,7 +20,7 @@ public:
   std::string uuid;
   std::string name;
 
-  std::unique_ptr<contagent::Behaviour> toBehaviour() const;
+  std::shared_ptr<contagent::Behaviour> toBehaviour() const;
 };
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(BehaviourSpec, uuid, name)

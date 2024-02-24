@@ -33,15 +33,14 @@ int main(int argc, char *argv[]) {
   }
 
   auto behaviours = load_behaviours(behaviours_path);
-  auto config = make_configuration(start_time, end_time);
+  auto config = make_configuration(start_time, end_time, behaviours);
   Runner runner(std::move(config));
   runner.run();
 }
 
 std::unique_ptr<Configuration>
-make_configuration(const uint_fast32_t start_time,
-                   const uint_fast32_t end_time) {
-  std::vector<std::shared_ptr<Behaviour>> behaviours;
+make_configuration(const uint_fast32_t start_time, const uint_fast32_t end_time,
+                   const std::vector<std::shared_ptr<Behaviour>> &behaviours) {
   std::vector<std::shared_ptr<Belief>> beliefs;
   std::vector<std::shared_ptr<Agent>> agents;
   std::unique_ptr<std::ostream> ostream =
@@ -52,7 +51,7 @@ make_configuration(const uint_fast32_t start_time,
       full_output);
   return config;
 }
-std::vector<std::unique_ptr<Behaviour>>
+std::vector<std::shared_ptr<Behaviour>>
 load_behaviours(const std::string &file_path) {
   std::ifstream file(file_path);
   try {
@@ -60,7 +59,7 @@ load_behaviours(const std::string &file_path) {
     auto specs =
         data.template get<std::vector<contagent::json::BehaviourSpec>>();
 
-    std::vector<std::unique_ptr<Behaviour>> behaviours(specs.size());
+    std::vector<std::shared_ptr<Behaviour>> behaviours;
     std::transform(specs.begin(), specs.end(), std::back_inserter(behaviours),
                    [](const contagent::json::BehaviourSpec &spec) {
                      return spec.toBehaviour();
