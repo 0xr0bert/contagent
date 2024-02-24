@@ -14,13 +14,13 @@ using json = nlohmann::json;
 namespace contagent::json {
 class BehaviourSpec {
 public:
-  BehaviourSpec() {}
+  BehaviourSpec() = default;
   explicit BehaviourSpec(const contagent::Behaviour &behaviour);
 
   std::string uuid;
   std::string name;
 
-  std::shared_ptr<contagent::Behaviour> toBehaviour() const;
+  [[nodiscard]] std::shared_ptr<contagent::Behaviour> toBehaviour() const;
 };
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(BehaviourSpec, uuid, name)

@@ -22,14 +22,6 @@ class UUIDd {
   /// \author Robert Greener
   [[nodiscard]] const boost::uuids::uuid& getUuid() const;
 
-  bool operator==(const UUIDd& rhs) const;
-  bool operator!=(const UUIDd& rhs) const;
-
-  bool operator<(const UUIDd& rhs) const;
-  bool operator>(const UUIDd& rhs) const;
-  bool operator<=(const UUIDd& rhs) const;
-  bool operator>=(const UUIDd& rhs) const;
-
  private:
   const boost::uuids::uuid uuid_;
 };

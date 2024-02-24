@@ -9,14 +9,6 @@ class Named {
 
   [[nodiscard]] const std::string& getName() const;
 
-  bool operator==(const Named& rhs) const;
-  bool operator!=(const Named& rhs) const;
-
-  bool operator<(const Named& rhs) const;
-  bool operator>(const Named& rhs) const;
-  bool operator<=(const Named& rhs) const;
-  bool operator>=(const Named& rhs) const;
-
  private:
   std::string name_;
 };

@@ -8,21 +8,6 @@ Belief::Belief(std::string name) : UUIDd(), Named(std::move(name)) {}
 
 Belief::Belief(boost::uuids::uuid uuid, std::string name)
     : UUIDd(uuid), Named(std::move(name)) {}
-bool Belief::operator<(const Belief& rhs) const {
-  return std::tie(static_cast<const UUIDd&>(*this),
-                  static_cast<const Named&>(*this)) <
-         std::tie(static_cast<const UUIDd&>(rhs),
-                  static_cast<const Named&>(rhs));
-}
-bool Belief::operator>(const Belief& rhs) const {
-  return rhs < *this;
-}
-bool Belief::operator<=(const Belief& rhs) const {
-  return !(rhs < *this);
-}
-bool Belief::operator>=(const Belief& rhs) const {
-  return !(*this < rhs);
-}
 void Belief::setRelationship(std::weak_ptr<Belief>& belief,
                                     double_t relationship) {
   relationships_[belief] = relationship;

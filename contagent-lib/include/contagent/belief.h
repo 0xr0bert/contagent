@@ -34,11 +34,6 @@ class Belief : public UUIDd, public Named {
                                std::owner_less<>>&
   getPerceptions() const;
 
-  bool operator<(const Belief& rhs) const;
-  bool operator>(const Belief& rhs) const;
-  bool operator<=(const Belief& rhs) const;
-  bool operator>=(const Belief& rhs) const;
-
  private:
   std::map<std::weak_ptr<Belief>, double_t, std::owner_less<>> relationships_;
   std::map<std::weak_ptr<Behaviour>, double_t, std::owner_less<>> perceptions_;
