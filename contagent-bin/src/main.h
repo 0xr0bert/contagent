@@ -11,6 +11,6 @@
 using namespace contagent;
 
 int main(int argc, char* argv[]);
-std::unique_ptr<Configuration> make_configuration();
+std::unique_ptr<Configuration> make_configuration(uint_fast32_t start_time, uint_fast32_t end_time);
 
 #endif // CONTAGENT_MAIN_H
