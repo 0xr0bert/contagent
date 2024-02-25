@@ -33,15 +33,16 @@ int main(int argc, char *argv[]) {
   }
 
   auto behaviours = load_behaviours(behaviours_path);
-  auto config = make_configuration(start_time, end_time, behaviours);
+  auto beliefs = load_beliefs(beliefs_path, behaviours);
+  auto config = make_configuration(start_time, end_time, behaviours, beliefs);
   Runner runner(std::move(config));
   runner.run();
 }
 
 std::unique_ptr<Configuration>
 make_configuration(const uint_fast32_t start_time, const uint_fast32_t end_time,
-                   const std::vector<std::shared_ptr<Behaviour>> &behaviours) {
-  std::vector<std::shared_ptr<Belief>> beliefs;
+                   const std::vector<std::shared_ptr<Behaviour>> &behaviours,
+                   const std::vector<std::shared_ptr<Belief>> &beliefs) {
   std::vector<std::shared_ptr<Agent>> agents;
   std::unique_ptr<std::ostream> ostream =
       std::make_unique<std::ostream>(std::cout.rdbuf());
@@ -68,5 +69,49 @@ load_behaviours(const std::string &file_path) {
     return behaviours;
   } catch (const nlohmann::detail::parse_error &e) {
     LOG(FATAL) << "Error reading behaviours JSON " << e.what();
+  }
+}
+std::vector<std::shared_ptr<Belief>>
+load_beliefs(const std::string &file_path,
+             const std::vector<std::shared_ptr<Behaviour>> &behaviours) {
+  std::ifstream file(file_path);
+  try {
+    nlohmann::json data = nlohmann::json::parse(file);
+    auto specs = data.template get<std::vector<contagent::json::BeliefSpec>>();
+
+    std::map<boost::uuids::uuid, std::shared_ptr<Behaviour>> behaviour_map;
+
+    std::transform(
+        behaviours.begin(), behaviours.end(),
+        std::inserter(behaviour_map, behaviour_map.end()),
+        [](const std::shared_ptr<Behaviour> &behaviour) {
+          return std::pair<boost::uuids::uuid, std::shared_ptr<Behaviour>>(
+              behaviour->getUuid(), behaviour);
+        });
+
+    std::vector<std::shared_ptr<Belief>> beliefs;
+
+    std::transform(specs.begin(), specs.end(), std::back_inserter(beliefs),
+                   [behaviour_map](const contagent::json::BeliefSpec &spec) {
+                     return spec.toUnlinkedBelief(behaviour_map);
+                   });
+
+    std::map<boost::uuids::uuid, std::shared_ptr<Belief>> belief_map;
+
+    std::transform(
+        beliefs.begin(), beliefs.end(),
+        std::inserter(belief_map, belief_map.end()),
+        [](const std::shared_ptr<Belief> &belief) {
+          return std::pair<boost::uuids::uuid, std::shared_ptr<Belief>>(
+              belief->getUuid(), belief);
+        });
+
+    for (auto &belief : specs) {
+      belief.linkBeliefs(belief_map);
+    }
+
+    return beliefs;
+  } catch (const std::exception &e) {
+    LOG(FATAL) << "Error reading beliefs JSON " << e.what();
   }
 }
