@@ -6,5 +6,6 @@
 #define CONTAGENT_JSON_H
 
 #include "behaviour_spec.h"
+#include "belief_spec.h"
 
 #endif // CONTAGENT_JSON_H

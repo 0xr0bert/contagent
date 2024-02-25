@@ -17,7 +17,7 @@ Agent::Agent(const uint_fast32_t n_days) {
 
 [[maybe_unused]] const std::map<std::shared_ptr<Belief>, double_t>&
 Agent::getActivationsForDay(const std::size_t day) {
-  return activations_[day];
+  return activations_.at(day);
 }
 
 Agent::Agent(
