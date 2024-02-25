@@ -35,7 +35,6 @@ Agent::Agent(
 }
 
 [[maybe_unused]] const std::map<std::weak_ptr<Agent>, double_t, std::owner_less<>>&
-
 Agent::getFriends() const {
   return friends_;
 }

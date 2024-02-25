@@ -98,6 +98,10 @@ class Agent : public UUIDd {
                      std::unordered_map<std::shared_ptr<Behaviour>, double_t>>
       performance_relationships_;
 
+  /// Initialize the agent, reserving the space in the ::activations_ and
+  /// ::actions_ vectors.
+  /// \param n_days The number of days that the simulation will be run for.
+  /// \throws std::length_exception If n_days is greater than std::max_size().
   void initialize(uint_fast32_t n_days);
 };
 }  // namespace contagent

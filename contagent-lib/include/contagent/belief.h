@@ -1,43 +1,45 @@
 #ifndef CONTAGENT_BELIEF_H
 #define CONTAGENT_BELIEF_H
 
-#include <map>
-#include <memory>
 #include "behaviour.h"
 #include "named.h"
 #include "uuidd.h"
+#include <map>
+#include <memory>
 namespace contagent {
 
 class Belief : public UUIDd, public Named {
- public:
-  explicit Belief(std::string name);
+public:
+  explicit Belief(std::string name) noexcept;
 
-  Belief(boost::uuids::uuid uuid, std::string name);
+  Belief(boost::uuids::uuid uuid, std::string name) noexcept;
 
-  void setRelationship(std::weak_ptr<Belief>& belief, double_t relationship);
+  [[maybe_unused]] void setRelationship(std::weak_ptr<Belief> &belief,
+                                        double_t relationship) noexcept;
 
-  void setRelationships(
-      std::map<std::weak_ptr<Belief>, double_t, std::owner_less<>>
-          relationships);
+  [[maybe_unused]] void
+  setRelationships(std::map<std::weak_ptr<Belief>, double_t, std::owner_less<>>
+                       relationships) noexcept;
 
   [[nodiscard]] const std::map<std::weak_ptr<Belief>, double_t,
-                               std::owner_less<>>&
-  getRelationships() const;
+                               std::owner_less<>> &
+  getRelationships() const noexcept;
 
-  void setPerception(std::weak_ptr<Behaviour>& behaviour, double_t perception);
+  [[maybe_unused]] void setPerception(std::weak_ptr<Behaviour> &behaviour,
+                                      double_t perception) noexcept;
 
-  void setPerceptions(
-      std::map<std::weak_ptr<Behaviour>, double_t, std::owner_less<>>
-          perceptions);
+  [[maybe_unused]] void
+  setPerceptions(std::map<std::weak_ptr<Behaviour>, double_t, std::owner_less<>>
+                     perceptions) noexcept;
 
   [[nodiscard]] const std::map<std::weak_ptr<Behaviour>, double_t,
-                               std::owner_less<>>&
-  getPerceptions() const;
+                               std::owner_less<>> &
+  getPerceptions() const noexcept;
 
- private:
+private:
   std::map<std::weak_ptr<Belief>, double_t, std::owner_less<>> relationships_;
   std::map<std::weak_ptr<Behaviour>, double_t, std::owner_less<>> perceptions_;
 };
-}  // namespace contagent
+} // namespace contagent
 
-#endif  //CONTAGENT_BELIEF_H
+#endif // CONTAGENT_BELIEF_H

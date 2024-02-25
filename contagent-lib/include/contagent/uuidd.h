@@ -11,18 +11,20 @@ class UUIDd {
   /// Create a new UUIDd.
   /// \param uuid The UUID.
   /// \author Robert Greener
-  explicit UUIDd(boost::uuids::uuid uuid);
+  explicit UUIDd(boost::uuids::uuid uuid) noexcept;
 
   /// Create a new UUIDd with a randomly generated UUID.
   /// \author Robert Greener
-  UUIDd();
+  UUIDd() noexcept;
 
   /// Get the UUID.
   /// \return The UUID.
   /// \author Robert Greener
-  [[nodiscard]] const boost::uuids::uuid& getUuid() const;
+  [[nodiscard]] const boost::uuids::uuid& getUuid() const noexcept;
 
  private:
+  /// The UUID
+  /// \author Robert Greener
   const boost::uuids::uuid uuid_;
 };
 

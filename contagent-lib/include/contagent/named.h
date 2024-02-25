@@ -3,15 +3,25 @@
 
 #include <string>
 namespace contagent {
+/// Something with a name.
+/// \author Robert Greener
 class Named {
- public:
-  explicit Named(std::string  name);
+public:
+  /// Create a new named.
+  /// \param name The name.
+  /// \author Robert Greener.
+  explicit Named(std::string name) noexcept;
 
-  [[nodiscard]] const std::string& getName() const;
+  /// Get the name of this object.
+  /// \return The name.
+  /// \author Robert Greener
+  [[nodiscard]] const std::string &getName() const noexcept;
 
- private:
-  std::string name_;
+private:
+  /// The name of this object
+  /// \author Robert Greener
+  const std::string name_;
 };
-}  // namespace contagent
+} // namespace contagent
 
-#endif  //CONTAGENT_NAMED_H
+#endif // CONTAGENT_NAMED_H
