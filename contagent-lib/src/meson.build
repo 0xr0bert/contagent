@@ -6,6 +6,7 @@ lib_sources = files(
     'named.cc',
     'runner.cc',
     'uuidd.cc',
+    'json/agent_spec.cc',
     'json/behaviour_spec.cc',
     'json/belief_spec.cc'
 )

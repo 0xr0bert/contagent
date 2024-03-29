@@ -62,7 +62,11 @@ public:
 
   [[maybe_unused]] [[nodiscard]] const std::map<std::weak_ptr<Agent>, double_t,
                                                 std::owner_less<>> &
+
   getFriends() const;
+  void setActivations(
+      std::vector<std::unordered_map<std::shared_ptr<Belief>, double_t>>
+          activations);
   [[maybe_unused]] void setFriends(
       std::map<std::weak_ptr<Agent>, double_t, std::owner_less<>> friends);
 
@@ -127,7 +131,8 @@ public:
                      const std::vector<std::shared_ptr<Belief>> &beliefs);
 
 private:
-  std::vector<std::map<std::shared_ptr<Belief>, double_t>> activations_;
+  std::vector<std::unordered_map<std::shared_ptr<Belief>, double_t>>
+      activations_;
 
   std::map<std::weak_ptr<Agent>, double_t, std::owner_less<>> friends_;
 

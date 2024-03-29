@@ -286,4 +286,9 @@ void Agent::initialize(uint_fast32_t n_days) {
   actions_.reserve(n_days);
   activations_.reserve(n_days);
 }
+void Agent::setActivations(
+    std::vector<std::unordered_map<std::shared_ptr<Belief>, double_t>>
+        activations) {
+  activations_ = std::move(activations);
+}
 }  // namespace contagent

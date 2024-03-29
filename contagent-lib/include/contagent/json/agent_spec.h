@@ -26,35 +26,43 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef CONTAGENT_UUIDD_H
-#define CONTAGENT_UUIDD_H
+#ifndef CONTAGENT_AGENT_SPEC_H
 
-#include <boost/uuid/uuid.hpp>
+#include "contagent/agent.h"
+#include "contagent/behaviour.h"
+#include "contagent/belief.h"
+#include "nlohmann/json.hpp"
+#include <string>
 
-namespace contagent {
-/// Something with a UUID.
-/// \author Robert Greener
-class UUIDd {
+namespace contagent::json {
+class AgentSpec {
 public:
-  /// Create a new UUIDd.
-  /// \param uuid The UUID.
-  /// \author Robert Greener
-  explicit UUIDd(boost::uuids::uuid uuid) noexcept;
+  AgentSpec() = default;
+  explicit AgentSpec(const contagent::Agent &agent);
 
-  /// Create a new UUIDd with a randomly generated UUID.
-  /// \author Robert Greener
-  UUIDd() noexcept;
+  std::string uuid;
+  std::vector<std::string> actions;
+  std::vector<std::unordered_map<std::string, double_t>> activations;
+  std::unordered_map<std::string, double_t> deltas;
+  std::unordered_map<std::string, double_t> friends;
+  std::unordered_map<std::string, std::unordered_map<std::string, double_t>>
+      performance_relationships;
 
-  /// Get the UUID.
-  /// \return The UUID.
-  /// \author Robert Greener
-  [[nodiscard]] const boost::uuids::uuid &getUuid() const noexcept;
+  [[nodiscard]] std::shared_ptr<contagent::Agent>
+  toUnlinkedAgent(uint_fast32_t activations_at_time,
+                  const std::map<boost::uuids::uuid, std::shared_ptr<Behaviour>>
+                      &behaviours,
+                  const std::map<boost::uuids::uuid, std::shared_ptr<Belief>>
+                      &beliefs) const;
 
-private:
-  /// The UUID
-  /// \author Robert Greener
-  const boost::uuids::uuid uuid_;
+  void linkAgents(
+      const std::map<boost::uuids::uuid, std::shared_ptr<Agent>> &agents) const;
 };
-} // namespace contagent
 
-#endif // CONTAGENT_UUIDD_H
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(AgentSpec, uuid, actions, activations,
+                                   deltas, friends, performance_relationships);
+} // namespace contagent::json
+
+#define CONTAGENT_AGENT_SPEC_H
+
+#endif // CONTAGENT_AGENT_SPEC_H

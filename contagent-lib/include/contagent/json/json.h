@@ -31,5 +31,6 @@
 
 #include "behaviour_spec.h"
 #include "belief_spec.h"
+#include "agent_spec.h"
 
 #endif // CONTAGENT_JSON_H
