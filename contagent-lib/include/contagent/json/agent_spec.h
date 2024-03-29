@@ -38,7 +38,7 @@ namespace contagent::json {
 class AgentSpec {
 public:
   AgentSpec() = default;
-  explicit AgentSpec(const contagent::Agent &agent);
+  [[maybe_unused]] explicit AgentSpec(const contagent::Agent &agent);
 
   std::string uuid;
   std::vector<std::string> actions;
@@ -60,7 +60,7 @@ public:
 };
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(AgentSpec, uuid, actions, activations,
-                                   deltas, friends, performance_relationships);
+                                   deltas, friends, performance_relationships)
 } // namespace contagent::json
 
 #define CONTAGENT_AGENT_SPEC_H

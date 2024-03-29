@@ -43,21 +43,22 @@ Agent::Agent(const uint_fast32_t n_days) {
   initialize(n_days);
 }
 
-[[maybe_unused]] const std::map<std::shared_ptr<Belief>, double_t>&
+[[maybe_unused]] const std::unordered_map<std::shared_ptr<Belief>, double_t>&
 Agent::getActivationsForDay(const std::size_t day) {
   return activations_.at(day);
 }
 
 Agent::Agent(
-    const uint_fast32_t n_days, boost::uuids::uuid uuid,
-    std::vector<std::map<std::shared_ptr<Belief>, double_t>> activations)
+    uint_fast32_t n_days, boost::uuids::uuid uuid,
+             std::vector<std::unordered_map<std::shared_ptr<Belief>, double_t>>
+                 activations)
     : UUIDd(uuid), activations_(std::move(activations)) {
   initialize(n_days);
 }
 
-Agent::Agent(
-    std::vector<std::map<std::shared_ptr<Belief>, double_t>> activations,
-    const uint_fast32_t n_days)
+Agent::Agent(std::vector<std::unordered_map<std::shared_ptr<Belief>, double_t>>
+                 activations,
+    uint_fast32_t n_days)
     : activations_(std::move(activations)) {
   initialize(n_days);
 }
@@ -290,5 +291,9 @@ void Agent::setActivations(
     std::vector<std::unordered_map<std::shared_ptr<Belief>, double_t>>
         activations) {
   activations_ = std::move(activations);
+}
+const std::vector<std::unordered_map<std::shared_ptr<Belief>, double_t>> &
+Agent::getActivations() const noexcept{
+  return activations_;
 }
 }  // namespace contagent

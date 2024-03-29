@@ -47,16 +47,18 @@ public:
   /// \throws std::length_exception If n_days is greater than std::max_size().
   /// \author Robert Greener
   Agent(uint_fast32_t n_days, boost::uuids::uuid uuid,
-        std::vector<std::map<std::shared_ptr<Belief>, double_t>> activations);
+        std::vector<std::unordered_map<std::shared_ptr<Belief>, double_t>>
+            activations);
 
-  Agent(std::vector<std::map<std::shared_ptr<Belief>, double_t>> activations,
+  Agent(std::vector<std::unordered_map<std::shared_ptr<Belief>, double_t>>
+            activations,
         uint_fast32_t n_days);
 
   Agent(uint_fast32_t n_days, boost::uuids::uuid uuid);
 
   explicit Agent(uint_fast32_t n_days);
 
-  [[maybe_unused]] [[nodiscard]] const std::map<std::shared_ptr<Belief>,
+  [[maybe_unused]] [[nodiscard]] const std::unordered_map<std::shared_ptr<Belief>,
                                                 double_t> &
   getActivationsForDay(std::size_t day);
 
@@ -64,6 +66,10 @@ public:
                                                 std::owner_less<>> &
 
   getFriends() const;
+
+  [[nodiscard]] const std::vector<std::unordered_map<std::shared_ptr<Belief>, double_t>> &
+  getActivations() const noexcept;
+
   void setActivations(
       std::vector<std::unordered_map<std::shared_ptr<Belief>, double_t>>
           activations);

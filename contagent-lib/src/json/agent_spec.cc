@@ -30,7 +30,70 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
-contagent::json::AgentSpec::AgentSpec(const contagent::Agent &agent) {}
+[[maybe_unused]] contagent::json::AgentSpec::AgentSpec(const contagent::Agent &agent)
+    : uuid(boost::lexical_cast<std::string>(agent.getUuid())) {
+  std::transform(agent.getActions().begin(), agent.getActions().end(),
+                 std::back_inserter(actions), [](const auto &action) {
+                   return boost::lexical_cast<std::string>(action->getUuid());
+                 });
+
+  std::transform(agent.getActivations().begin(), agent.getActivations().end(),
+                 std::back_inserter(activations), [](const auto &m) {
+                   std::unordered_map<std::string, double_t> new_m;
+
+                   std::transform(
+                       m.begin(), m.end(), std::inserter(new_m, new_m.end()),
+                       [](const auto &pair) {
+                         std::pair<std::string, double_t> new_pair;
+                         new_pair.first =
+                             boost::lexical_cast<std::string>(pair.first);
+                         new_pair.second = pair.second;
+                         return new_pair;
+                       });
+
+                   return new_m;
+                 });
+
+  std::transform(agent.getDeltas().begin(), agent.getDeltas().end(),
+                 std::inserter(deltas, deltas.end()), [](const auto &pair) {
+                   std::pair<std::string, double_t> new_pair(
+                       boost::lexical_cast<std::string>(pair.first),
+                       pair.second);
+                   return new_pair;
+                 });
+
+  std::transform(
+      agent.getFriends().begin(), agent.getFriends().end(),
+      std::inserter(friends, friends.end()), [](const auto &pair) {
+        if (auto shared_friend = pair.first.lock()) {
+          return std::pair<std::string, double_t>(
+              boost::lexical_cast<std::string>(shared_friend->getUuid()),
+              pair.second);
+        } else {
+          throw std::runtime_error("Unable to lock weak pointer");
+        }
+      });
+
+  std::transform(
+      agent.getPerformanceRelationships().begin(),
+      agent.getPerformanceRelationships().end(),
+      std::inserter(performance_relationships, performance_relationships.end()),
+      [](const auto &outer_pair) {
+        std::unordered_map<std::string, double_t> new_inner_map;
+
+        std::transform(outer_pair.second.begin(), outer_pair.second.end(),
+                       std::inserter(new_inner_map, new_inner_map.end()),
+                       [](const auto &inner_pair) {
+                         return std::pair<std::string, double_t>(
+                             boost::lexical_cast<std::string>(inner_pair.first),
+                             inner_pair.second);
+                       });
+
+        return std::pair<std::string,
+                         std::unordered_map<std::string, double_t>>(
+            boost::lexical_cast<std::string>(outer_pair.first), new_inner_map);
+      });
+}
 
 std::shared_ptr<contagent::Agent> contagent::json::AgentSpec::toUnlinkedAgent(
     uint_fast32_t n_days,
