@@ -62,7 +62,8 @@ int main(int argc, char *argv[]) {
 
   auto behaviours = load_behaviours(behaviours_path);
   auto beliefs = load_beliefs(beliefs_path, behaviours);
-  auto config = make_configuration(start_time, end_time, behaviours, beliefs);
+  auto config =
+      make_configuration(start_time, end_time, behaviours, beliefs, full_output);
   Runner runner(std::move(config));
   runner.run();
 }
@@ -70,11 +71,11 @@ int main(int argc, char *argv[]) {
 std::unique_ptr<Configuration>
 make_configuration(const uint_fast32_t start_time, const uint_fast32_t end_time,
                    const std::vector<std::shared_ptr<Behaviour>> &behaviours,
-                   const std::vector<std::shared_ptr<Belief>> &beliefs) {
+                   const std::vector<std::shared_ptr<Belief>> &beliefs,
+                   const bool full_output) {
   std::vector<std::shared_ptr<Agent>> agents;
   std::unique_ptr<std::ostream> ostream =
       std::make_unique<std::ostream>(std::cout.rdbuf());
-  bool full_output = false;
   std::unique_ptr<Configuration> config = std::make_unique<Configuration>(
       behaviours, beliefs, agents, start_time, end_time, std::move(ostream),
       full_output);
