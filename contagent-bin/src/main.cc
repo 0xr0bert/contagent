@@ -66,8 +66,7 @@ int main(int argc, char *argv[]) {
 
   auto behaviours = load_behaviours(behaviours_path);
   auto beliefs = load_beliefs(beliefs_path, behaviours);
-  auto agents =
-      load_agents(agents_path, behaviours, beliefs, end_time);
+  auto agents = load_agents(agents_path, behaviours, beliefs, end_time);
   auto config = make_configuration(start_time, end_time, behaviours, beliefs,
                                    agents, full_output);
   Runner runner(std::move(config));
@@ -114,16 +113,8 @@ load_beliefs(const std::string &file_path,
     nlohmann::json data = nlohmann::json::parse(file);
     auto specs = data.template get<std::vector<contagent::json::BeliefSpec>>();
 
-    std::map<boost::uuids::uuid, std::shared_ptr<Behaviour>> behaviour_map;
-
-    std::transform(
-        behaviours.begin(), behaviours.end(),
-        std::inserter(behaviour_map, behaviour_map.end()),
-        [](const std::shared_ptr<Behaviour> &behaviour) {
-          return std::pair<boost::uuids::uuid, std::shared_ptr<Behaviour>>(
-              behaviour->getUuid(), behaviour);
-        });
-
+    std::map<boost::uuids::uuid, std::shared_ptr<Behaviour>> behaviour_map =
+        vector_to_uuid_map(behaviours);
     std::vector<std::shared_ptr<Belief>> beliefs;
 
     std::transform(specs.begin(), specs.end(), std::back_inserter(beliefs),
@@ -131,15 +122,8 @@ load_beliefs(const std::string &file_path,
                      return spec.toUnlinkedBelief(behaviour_map);
                    });
 
-    std::map<boost::uuids::uuid, std::shared_ptr<Belief>> belief_map;
-
-    std::transform(
-        beliefs.begin(), beliefs.end(),
-        std::inserter(belief_map, belief_map.end()),
-        [](const std::shared_ptr<Belief> &belief) {
-          return std::pair<boost::uuids::uuid, std::shared_ptr<Belief>>(
-              belief->getUuid(), belief);
-        });
+    std::map<boost::uuids::uuid, std::shared_ptr<Belief>> belief_map =
+        vector_to_uuid_map(beliefs);
 
     for (auto &belief : specs) {
       belief.linkBeliefs(belief_map);
