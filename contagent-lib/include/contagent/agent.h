@@ -34,6 +34,8 @@
 #include <map>
 #include <memory>
 #include <optional>
+#include <unordered_map>
+
 namespace contagent {
 
 /// An agent in the simulation.
