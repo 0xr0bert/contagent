@@ -58,6 +58,7 @@ int main(int argc, char *argv[]) {
 
   if (!parse(argc, argv, cli)) {
     std::cout << make_man_page(cli, "contagentsim");
+    return 1;
   }
 
   if (end_time <= start_time) {
