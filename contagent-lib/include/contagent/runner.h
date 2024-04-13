@@ -33,23 +33,42 @@
 
 #include "configuration.h"
 namespace contagent {
+/// Runner does as it suggests -- runs the simulation.
+/// \author Robert Greener
 class Runner {
- public:
+public:
+  /// Create a new Runner with a supplied Configuration, which the Runner owns.
+  /// \author Robert Greener
   explicit Runner(std::unique_ptr<Configuration> configuration);
 
+  /// For every Agent in the Configuration call
+  /// Agent::updateActivationsForAllBeliefs.
+  /// \author Robert Greener
   void perceiveBeliefs(uint_fast32_t time);
 
+  /// For every Agent in the Configuration call Agent::performAction.
+  /// \author Robert Greener
   void performActions(uint_fast32_t time);
 
+  /// Tick for a given time, calls ::perceiveBeliefs followed by
+  /// ::performActions.
+  /// \author Robert Greener
   void tick(uint_fast32_t time);
 
+  /// Tick between the start_time (inclusive) and end_time (exclusive), calling
+  /// ::tick.
+  /// \author Robert Greener
   void tickBetween(uint_fast32_t start_time, uint_fast32_t end_time);
 
+  /// Tick between the Configuration::getStartTime (inclusive) and
+  /// Configuration::getEndTime (exclusive), serializing the output at the end.
+  /// \author Robert Greener
   void run();
 
- private:
+private:
+  /// The Configuration of the simulation run.
   std::unique_ptr<Configuration> configuration_;
 };
-}
+} // namespace contagent
 
-#endif  //CONTAGENT_RUNNER_H
+#endif // CONTAGENT_RUNNER_H
