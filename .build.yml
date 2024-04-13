@@ -1,0 +1,14 @@
+image: debian/stable
+packages:
+  - meson
+  - libgoogle-glog-dev
+  - nlohmann-json3-dev
+sources:
+  - https://git.sr.ht/~ragreener1/contagent
+tasks:
+  - setup |
+      cd contagent
+      meson setup builddir
+  - compile |
+      cd contagent
+      ninja -C builddir
