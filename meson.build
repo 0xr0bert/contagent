@@ -5,7 +5,7 @@ project('contagent', 'cpp',
 subdir('contagent-lib')
 
 boost_dep = dependency('boost')
-glog_dep = dependency('glog')
+glog_dep = dependency('libglog')
 contagent_lib = shared_library(
         'contagent',
         lib_sources,
