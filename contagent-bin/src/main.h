@@ -40,6 +40,7 @@ std::unique_ptr<Configuration>
 make_configuration(const uint_fast32_t start_time, const uint_fast32_t end_time,
                    const std::vector<std::shared_ptr<Behaviour>> &behaviours,
                    const std::vector<std::shared_ptr<Belief>> &beliefs,
+                   const std::vector<std::shared_ptr<Agent>> &agents,
                    const bool full_output);
 
 std::vector<std::shared_ptr<Behaviour>>
@@ -48,5 +49,19 @@ load_behaviours(const std::string &file_path);
 std::vector<std::shared_ptr<Belief>>
 load_beliefs(const std::string &file_path,
              const std::vector<std::shared_ptr<Behaviour>> &behaviours);
+
+std::vector<std::shared_ptr<Agent>>
+load_agents(const std::string &file_path,
+            const std::vector<std::shared_ptr<Behaviour>> &behaviours,
+            const std::vector<std::shared_ptr<Belief>> &beliefs,
+            const uint_fast32_t n_days);
+
+template <class U>
+concept CheckUUIDd = std::is_base_of<UUIDd, U>::value;
+
+template <class T>
+requires CheckUUIDd<T>
+std::map<boost::uuids::uuid, std::shared_ptr<T>>
+vector_to_uuid_map(const std::vector<std::shared_ptr<T>> &vec);
 
 #endif // CONTAGENT_MAIN_H

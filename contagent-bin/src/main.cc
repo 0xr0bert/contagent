@@ -60,10 +60,16 @@ int main(int argc, char *argv[]) {
     std::cout << make_man_page(cli, "contagentsim");
   }
 
+  if (end_time <= start_time) {
+    throw std::invalid_argument("End time must be after start time");
+  }
+
   auto behaviours = load_behaviours(behaviours_path);
   auto beliefs = load_beliefs(beliefs_path, behaviours);
-  auto config =
-      make_configuration(start_time, end_time, behaviours, beliefs, full_output);
+  auto agents =
+      load_agents(agents_path, behaviours, beliefs, end_time - start_time);
+  auto config = make_configuration(start_time, end_time, behaviours, beliefs,
+                                   agents, full_output);
   Runner runner(std::move(config));
   runner.run();
 }
@@ -72,8 +78,8 @@ std::unique_ptr<Configuration>
 make_configuration(const uint_fast32_t start_time, const uint_fast32_t end_time,
                    const std::vector<std::shared_ptr<Behaviour>> &behaviours,
                    const std::vector<std::shared_ptr<Belief>> &beliefs,
+                   const std::vector<std::shared_ptr<Agent>> &agents,
                    const bool full_output) {
-  std::vector<std::shared_ptr<Agent>> agents;
   std::unique_ptr<std::ostream> ostream =
       std::make_unique<std::ostream>(std::cout.rdbuf());
   std::unique_ptr<Configuration> config = std::make_unique<Configuration>(
@@ -143,4 +149,55 @@ load_beliefs(const std::string &file_path,
   } catch (const std::exception &e) {
     LOG(FATAL) << "Error reading beliefs JSON " << e.what();
   }
+}
+std::vector<std::shared_ptr<Agent>>
+load_agents(const std::string &file_path,
+            const std::vector<std::shared_ptr<Behaviour>> &behaviours,
+            const std::vector<std::shared_ptr<Belief>> &beliefs,
+            const uint_fast32_t n_days) {
+  std::ifstream file(file_path);
+  try {
+    nlohmann::json data = nlohmann::json::parse(file);
+    auto specs = data.template get<std::vector<contagent::json::AgentSpec>>();
+
+    std::map<boost::uuids::uuid, std::shared_ptr<Behaviour>> behaviour_map =
+        vector_to_uuid_map(behaviours);
+
+    std::map<boost::uuids::uuid, std::shared_ptr<Belief>> belief_map =
+        vector_to_uuid_map(beliefs);
+
+    std::vector<std::shared_ptr<Agent>> agents;
+
+    std::transform(specs.begin(), specs.end(), std::back_inserter(agents),
+                   [n_days, behaviour_map,
+                    belief_map](const contagent::json::AgentSpec &spec) {
+                     return spec.toUnlinkedAgent(n_days, behaviour_map,
+                                                 belief_map);
+                   });
+
+    std::map<boost::uuids::uuid, std::shared_ptr<Agent>> agent_map =
+        vector_to_uuid_map(agents);
+
+    for (auto &agent : specs) {
+      agent.linkAgents(agent_map);
+    }
+
+    return agents;
+  } catch (const std::exception &e) {
+    LOG(FATAL) << "Error reading agents JSON " << e.what();
+  }
+}
+template <class T>
+  requires CheckUUIDd<T>
+std::map<boost::uuids::uuid, std::shared_ptr<T>>
+vector_to_uuid_map(const std::vector<std::shared_ptr<T>> &vec) {
+  std::map<boost::uuids::uuid, std::shared_ptr<T>> m;
+
+  std::transform(vec.begin(), vec.end(), std::inserter(m, m.end()),
+                 [](const std::shared_ptr<T> &elem) {
+                   return std::pair<boost::uuids::uuid, std::shared_ptr<T>>(
+                       elem->getUuid(), elem);
+                 });
+
+  return m;
 }
