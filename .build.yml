@@ -6,7 +6,7 @@ packages:
   - libboost-all-dev
   - pkg-config
 sources:
-  - https://git.sr.ht/~ragreener1/contagent
+  - git@git.sr.ht:~ragreener1/contagent
 tasks:
   - setup: |
       cd contagent
