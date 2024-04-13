@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
   auto behaviours = load_behaviours(behaviours_path);
   auto beliefs = load_beliefs(beliefs_path, behaviours);
   auto agents =
-      load_agents(agents_path, behaviours, beliefs, end_time - start_time);
+      load_agents(agents_path, behaviours, beliefs, end_time);
   auto config = make_configuration(start_time, end_time, behaviours, beliefs,
                                    agents, full_output);
   Runner runner(std::move(config));
