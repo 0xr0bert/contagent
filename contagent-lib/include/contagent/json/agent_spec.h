@@ -49,7 +49,7 @@ public:
       performance_relationships;
 
   [[nodiscard]] std::shared_ptr<contagent::Agent>
-  toUnlinkedAgent(uint_fast32_t activations_at_time,
+  toUnlinkedAgent(uint_fast32_t n_days,
                   const std::map<boost::uuids::uuid, std::shared_ptr<Behaviour>>
                       &behaviours,
                   const std::map<boost::uuids::uuid, std::shared_ptr<Belief>>
