@@ -64,7 +64,7 @@ typedef struct configuration {
   unsigned char full_output;
 } configuration;
 
-// Log a message for a given day
+// Log a message for a given day.
 //
 // The caller has ownership over all pointers.
 void logger(const unsigned int day, const char *message);
