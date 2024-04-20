@@ -64,6 +64,9 @@ typedef struct configuration {
   unsigned char full_output;
 } configuration;
 
+// Log a message for a given day
+//
+// The caller has ownership over all pointers.
 void logger(const unsigned int day, const char *message);
 
 // The weighted relationship is the relationship between two beliefs
@@ -166,12 +169,26 @@ void agent_update_activation_for_all_beliefs(agent *a, const unsigned int day,
 void agent_perform_action(const agent *a, unsigned int day, GArray *behaviours,
                           GArray *beliefs);
 
+// Perceive beliefs for all agents.
+//
+// The caller has ownership of all pointers.
 void perceive_beliefs(configuration *c, unsigned int day);
 
+// Perform actions for all agents.
+//
+// The caller has ownership of all pointers.
 void perform_actions(configuration *c, unsigned int day);
 
+// Tick for the time.
+//
+// Perceives beliefs then performs actions.
+//
+// The caller has ownership of all pointers.
 void tick(configuration *c, unsigned int day);
 
+// Tick between the start time (inclusive) and end time (exclusive).
+//
+// The caller has ownership of all pointers.
 void tick_between(configuration *c, unsigned int start, unsigned int end);
 
 #endif // CONTAGENT_H
