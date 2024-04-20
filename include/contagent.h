@@ -2,20 +2,22 @@
 #define CONTAGENT_H
 #include "glib.h"
 
+typedef unsigned char uuid[16];
+
 typedef struct behaviour {
   char *name;
-  unsigned char uuid[16];
+  uuid uuid;
 } behaviour;
 
 typedef struct belief {
   char *name;
-  unsigned char uuid[16];
+  uuid uuid;
   GHashTable *perceptions;
   GHashTable *relationships;
 } belief;
 
 typedef struct agent {
-  unsigned char uuid[16];
+  uuid uuid;
   unsigned int n_days;
   GHashTable **activations;
   GHashTable *friends;
@@ -35,12 +37,32 @@ typedef struct configuration {
 
 void logger(const unsigned int day, const char *message);
 
+// The weighted relationship is the relationship between two beliefs
+// weighted by the activatino of the firs belief. It is used to describe
+// the probability of  adopting b2 given that you already hold b1.
+//
+// The caller has ownership of all pointers.
 double agent_weighted_relationship(const agent *a, const unsigned int day,
                                    belief *b1, belief *b2);
 
+// The context of adopting b given your activation of all the beliefs.
+//
+// This is the average of agent_weighted_relationship.
+//
+// beliefs is a GArray of belief*.
+//
+// The caller has ownership of all pointers.
 double agent_contextualize(const agent *a, const unsigned int day, belief *b,
                            const GArray *beliefs);
 
+// Get the sum of the weights of friends, grouped by the actions they
+// performed.
+//
+// Returns a GHashTable from behaviour* to double*, which the caller
+// takes ownership of. A delete function exists on the values of
+// the GHashTable.
+//
+// The caller has ownership of all pointers.
 GHashTable *agent_get_actions_of_friends(const agent *a,
                                          const unsigned int day);
 
