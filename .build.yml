@@ -4,13 +4,11 @@ packages:
   - libglib2.0-dev
   - pkg-config
 sources:
-  - git@git.sr.ht:~ragreener1/contagent
+  - https://git.sr.ht/~ragreener1/contagent
 triggers:
   - action: email
     condition: failure
-    to: ~ragreener1/contagent-devel@lists.sr.ht
-secrets:
-  - 60919306-69a2-4760-8001-1a12c14454ab
+    to: ~ragreener1/public-inbox@lists.sr.ht
 tasks:
   - setup: |
       cd contagent
