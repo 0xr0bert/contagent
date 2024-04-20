@@ -295,6 +295,3 @@ void tick_between(configuration *c, unsigned int start, unsigned int end) {
     tick(c, i);
   }
 }
-
-void run_simulation(configuration *c) {
-}
