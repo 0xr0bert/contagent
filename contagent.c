@@ -1,6 +1,11 @@
 #include "contagent.h"
 
+#include <stdio.h>
 #include <stdlib.h>
+
+void logger(const unsigned int day, const char *message) {
+  printf("[time: %u]: %s\n", day, message);
+}
 
 double agent_weighted_relationship(const agent *a, const unsigned int day,
                                    belief *b1, belief *b2) {
@@ -262,4 +267,34 @@ void agent_perform_action(const agent *a, unsigned int day, GArray *behaviours,
       a->actions[day] = beh_acc.behaviour;
     }
   }
+}
+
+void perceive_beliefs(configuration *c, unsigned int day) {
+  for (unsigned int i = 0; i < c->agents->len; ++i) {
+    agent *a = g_array_index(c->agents, agent *, i);
+    agent_update_activation_for_all_beliefs(a, day, c->beliefs);
+  }
+}
+
+void perform_actions(configuration *c, unsigned int day) {
+  for (unsigned int i = 0; i < c->agents->len; ++i) {
+    agent *a = g_array_index(c->agents, agent *, i);
+    agent_perform_action(a, day, c->behaviours, c->beliefs);
+  }
+}
+
+void tick(configuration *c, unsigned int day) {
+  logger(day, "Perceiving beliefs");
+  perceive_beliefs(c, day);
+  logger(day, "Performing actions");
+  perform_actions(c, day);
+}
+
+void tick_between(configuration *c, unsigned int start, unsigned int end) {
+  for (unsigned int i = start; i < end; ++i) {
+    tick(c, i);
+  }
+}
+
+void run_simulation(configuration *c) {
 }

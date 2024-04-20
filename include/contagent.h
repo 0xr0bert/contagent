@@ -24,6 +24,17 @@ typedef struct agent {
   GHashTable *performance_relationships;
 } agent;
 
+typedef struct configuration {
+  GArray *behaviours;
+  GArray *beliefs;
+  GArray *agents;
+  unsigned int start_time;
+  unsigned int end_time;
+  unsigned char full_output;
+} configuration;
+
+void logger(const unsigned int day, const char *message);
+
 double agent_weighted_relationship(const agent *a, const unsigned int day,
                                    belief *b1, belief *b2);
 
@@ -49,4 +60,13 @@ void agent_update_activation_for_all_beliefs(agent *a, const unsigned int day,
 
 void agent_perform_action(const agent *a, unsigned int day, GArray *behaviours,
                           GArray *beliefs);
-#endif
+
+void perceive_beliefs(configuration *c, unsigned int day);
+
+void perform_actions(configuration *c, unsigned int day);
+
+void tick(configuration *c, unsigned int day);
+
+void tick_between(configuration *c, unsigned int start, unsigned int end);
+
+#endif // CONTAGENT_H
