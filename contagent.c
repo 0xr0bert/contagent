@@ -96,10 +96,12 @@ void add_to_actions(void *friend_v, void *weight_v, void *acc_v) {
   const double *weight = (double *)weight_v;
   action_acc *acc = (action_acc *)acc_v;
   behaviour *action = friend->actions[acc->day];
-  const double *old_val = g_hash_table_lookup(acc->actions, action);
-  double *new_val = malloc(sizeof(double));
-  *new_val = (old_val == NULL ? 0.0 : *old_val) + *weight;
-  g_hash_table_replace(acc->actions, action, new_val);
+  double *val = g_hash_table_lookup(acc->actions, action);
+  if (val == NULL) {
+    val = malloc(sizeof(double));
+    *val = 0.0;
+  }
+  *val += *weight;
 }
 
 static void free_double(void *v) { free((double *)v); }
