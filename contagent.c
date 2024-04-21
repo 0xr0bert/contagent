@@ -33,11 +33,11 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <stdlib.h>
 
-void logger(const unsigned int day, const char *message) {
-  printf("[time: %u]: %s\n", day, message);
+void logger(const uint_fast32_t day, const char *message) {
+  printf("[time: %lu]: %s\n", day, message);
 }
 
-double agent_weighted_relationship(const agent *a, const unsigned int day,
+double agent_weighted_relationship(const agent *a, const uint_fast32_t day,
                                    belief *b1, belief *b2) {
   GHashTable *activations = a->activations[day];
 
@@ -58,14 +58,14 @@ double agent_weighted_relationship(const agent *a, const unsigned int day,
   }
 }
 
-double agent_contextualize(const agent *a, const unsigned int day, belief *b,
+double agent_contextualize(const agent *a, const uint_fast32_t day, belief *b,
                            const GArray *beliefs) {
-  const int n_beliefs = beliefs->len;
+  const uint32_t n_beliefs = beliefs->len;
   if (n_beliefs == 0) {
     return 0.0;
   } else {
     double context = 0.0;
-    for (int i = 0; i < n_beliefs; ++i) {
+    for (uint_fast32_t i = 0; i < n_beliefs; ++i) {
       belief *b2 = g_array_index(beliefs, belief *, i);
       context += agent_weighted_relationship(a, day, b, b2);
     }
@@ -75,7 +75,7 @@ double agent_contextualize(const agent *a, const unsigned int day, belief *b,
 
 typedef struct action_acc {
   GHashTable *actions;
-  unsigned int day;
+  uint_fast32_t day;
 } action_acc;
 
 void add_to_actions(void *friend_v, void *weight_v, void *acc_v) {
@@ -92,7 +92,7 @@ void add_to_actions(void *friend_v, void *weight_v, void *acc_v) {
 void free_double(void *v) { free((double *)v); }
 
 GHashTable *agent_get_actions_of_friends(const agent *a,
-                                         const unsigned int day) {
+                                         const uint_fast32_t day) {
   GHashTable *actions = g_hash_table_new_full(NULL, NULL, NULL, free_double);
 
   action_acc acc;
@@ -124,7 +124,7 @@ void add_to_pressure(void *action_v, void *w_v, void *acc_v) {
 
 double agent_pressure(const agent *a, belief *b,
                       GHashTable *actions_of_friends) {
-  unsigned int size = g_hash_table_size(actions_of_friends);
+  uint_fast32_t size = g_hash_table_size(actions_of_friends);
 
   pressure_acc acc;
   acc.pressure = 0.0;
@@ -139,7 +139,7 @@ double agent_pressure(const agent *a, belief *b,
   return acc.pressure;
 }
 
-double agent_activation_change(const agent *a, const unsigned int day,
+double agent_activation_change(const agent *a, const uint_fast32_t day,
                                belief *b, const GArray *beliefs,
                                GHashTable *actions_of_friends) {
   double pressure = agent_pressure(a, b, actions_of_friends);
@@ -151,7 +151,7 @@ double agent_activation_change(const agent *a, const unsigned int day,
   }
 }
 
-void agent_update_activation(agent *a, const unsigned int day, belief *b,
+void agent_update_activation(agent *a, const uint_fast32_t day, belief *b,
                              const GArray *beliefs,
                              GHashTable *actions_of_friends) {
   double *delta = g_hash_table_lookup(a->deltas, b);
@@ -180,11 +180,11 @@ void agent_update_activation(agent *a, const unsigned int day, belief *b,
   g_hash_table_replace(a->activations[day], b, new_activation);
 }
 
-void agent_update_activation_for_all_beliefs(agent *a, const unsigned int day,
+void agent_update_activation_for_all_beliefs(agent *a, const uint_fast32_t day,
                                              const GArray *beliefs) {
   GHashTable *actions_of_friends = agent_get_actions_of_friends(a, day);
-  const unsigned int n_beliefs = beliefs->len;
-  for (int i = 0; i < n_beliefs; ++i) {
+  const uint_fast32_t n_beliefs = beliefs->len;
+  for (uint_fast32_t i = 0; i < n_beliefs; ++i) {
     agent_update_activation(a, day, g_array_index(beliefs, belief *, i),
                             beliefs, actions_of_friends);
   }
@@ -228,20 +228,20 @@ void choose_behaviour(void *beh_v, void *prob_v, void *acc_v) {
   }
 }
 
-void agent_perform_action(const agent *a, unsigned int day, GArray *behaviours,
+void agent_perform_action(const agent *a, uint_fast32_t day, GArray *behaviours,
                           GArray *beliefs) {
   GHashTable *probabilities =
       g_hash_table_new_full(NULL, NULL, NULL, free_double);
 
   behaviour *max_beh = NULL;
   double max_v = DBL_MIN;
-  const unsigned int n_behaviours = behaviours->len;
-  const unsigned int n_beliefs = beliefs->len;
+  const uint_fast32_t n_behaviours = behaviours->len;
+  const uint_fast32_t n_beliefs = beliefs->len;
 
-  for (int i = 0; i < n_behaviours; i++) {
+  for (uint_fast32_t i = 0; i < n_behaviours; i++) {
     behaviour *beh = g_array_index(behaviours, behaviour *, i);
     double v = 0;
-    for (int j = 0; j < n_beliefs; j++) {
+    for (uint_fast32_t j = 0; j < n_beliefs; j++) {
       belief *bel = g_array_index(beliefs, belief *, i);
       GHashTable *prs_for_belief =
           g_hash_table_lookup(a->performance_relationships, bel);
@@ -299,29 +299,29 @@ void agent_perform_action(const agent *a, unsigned int day, GArray *behaviours,
   }
 }
 
-void perceive_beliefs(configuration *c, unsigned int day) {
-  for (unsigned int i = 0; i < c->agents->len; ++i) {
+void perceive_beliefs(configuration *c, uint_fast32_t day) {
+  for (uint_fast32_t i = 0; i < c->agents->len; ++i) {
     agent *a = g_array_index(c->agents, agent *, i);
     agent_update_activation_for_all_beliefs(a, day, c->beliefs);
   }
 }
 
-void perform_actions(configuration *c, unsigned int day) {
-  for (unsigned int i = 0; i < c->agents->len; ++i) {
+void perform_actions(configuration *c, uint_fast32_t day) {
+  for (uint_fast32_t i = 0; i < c->agents->len; ++i) {
     agent *a = g_array_index(c->agents, agent *, i);
     agent_perform_action(a, day, c->behaviours, c->beliefs);
   }
 }
 
-void tick(configuration *c, unsigned int day) {
+void tick(configuration *c, uint_fast32_t day) {
   logger(day, "Perceiving beliefs");
   perceive_beliefs(c, day);
   logger(day, "Performing actions");
   perform_actions(c, day);
 }
 
-void tick_between(configuration *c, unsigned int start, unsigned int end) {
-  for (unsigned int i = start; i < end; ++i) {
+void tick_between(configuration *c, uint_fast32_t start, uint_fast32_t end) {
+  for (uint_fast32_t i = start; i < end; ++i) {
     tick(c, i);
   }
 }

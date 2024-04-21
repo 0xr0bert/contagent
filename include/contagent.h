@@ -30,6 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #ifndef CONTAGENT_H
 #define CONTAGENT_H
 #include "glib.h"
+#include <stdint.h>
 
 typedef unsigned char uuid[16];
 
@@ -47,7 +48,7 @@ typedef struct belief {
 
 typedef struct agent {
   uuid uuid;
-  unsigned int n_days;
+  uint_fast32_t n_days;
   GHashTable **activations;
   GHashTable *friends;
   behaviour **actions;
@@ -59,22 +60,22 @@ typedef struct configuration {
   GArray *behaviours;
   GArray *beliefs;
   GArray *agents;
-  unsigned int start_time;
-  unsigned int end_time;
+  uint_fast32_t start_time;
+  uint_fast32_t end_time;
   unsigned char full_output;
 } configuration;
 
 // Log a message for a given day.
 //
 // The caller has ownership over all pointers.
-void logger(const unsigned int day, const char *message);
+void logger(const uint_fast32_t day, const char *message);
 
 // The weighted relationship is the relationship between two beliefs
 // weighted by the activatino of the firs belief. It is used to describe
 // the probability of  adopting b2 given that you already hold b1.
 //
 // The caller has ownership of all pointers.
-double agent_weighted_relationship(const agent *a, const unsigned int day,
+double agent_weighted_relationship(const agent *a, const uint_fast32_t day,
                                    belief *b1, belief *b2);
 
 // The context of adopting b given your activation of all the beliefs.
@@ -84,7 +85,7 @@ double agent_weighted_relationship(const agent *a, const unsigned int day,
 // beliefs is a GArray of belief*.
 //
 // The caller has ownership of all pointers.
-double agent_contextualize(const agent *a, const unsigned int day, belief *b,
+double agent_contextualize(const agent *a, const uint_fast32_t day, belief *b,
                            const GArray *beliefs);
 
 // Get the sum of the weights of friends, grouped by the actions they
@@ -96,7 +97,7 @@ double agent_contextualize(const agent *a, const unsigned int day, belief *b,
 //
 // The caller has ownership of all pointers.
 GHashTable *agent_get_actions_of_friends(const agent *a,
-                                         const unsigned int day);
+                                         const uint_fast32_t day);
 
 // The pressure towards adopting b based upon the actions of a's friends.
 //
@@ -124,7 +125,7 @@ double agent_pressure(const agent *a, belief *b,
 // agent_get_actions_of_friends.
 //
 // The caller has ownership of all pointers.
-double agent_activation_change(const agent *a, const unsigned int day,
+double agent_activation_change(const agent *a, const uint_fast32_t day,
                                belief *b, const GArray *beliefs,
                                GHashTable *actions_of_friends);
 
@@ -138,7 +139,7 @@ double agent_activation_change(const agent *a, const unsigned int day,
 // agent_get_actions_of_friends.
 //
 // The caller has ownership of all pointers.
-void agent_update_activation(agent *a, const unsigned int day, belief *b,
+void agent_update_activation(agent *a, const uint_fast32_t day, belief *b,
                              const GArray *beliefs,
                              GHashTable *actions_of_friends);
 
@@ -147,7 +148,7 @@ void agent_update_activation(agent *a, const unsigned int day, belief *b,
 // beliefs is a GArray storing belief*.
 //
 // The caller has ownership of all pointers.
-void agent_update_activation_for_all_beliefs(agent *a, const unsigned int day,
+void agent_update_activation_for_all_beliefs(agent *a, const uint_fast32_t day,
                                              const GArray *beliefs);
 
 // Perform an action at a given thime, given all the beliefs and behaviours in
@@ -166,29 +167,29 @@ void agent_update_activation_for_all_beliefs(agent *a, const unsigned int day,
 // beliefs is a GArray storing belief*.
 //
 // The caller has ownership of all pointers.
-void agent_perform_action(const agent *a, unsigned int day, GArray *behaviours,
+void agent_perform_action(const agent *a, uint_fast32_t day, GArray *behaviours,
                           GArray *beliefs);
 
 // Perceive beliefs for all agents.
 //
 // The caller has ownership of all pointers.
-void perceive_beliefs(configuration *c, unsigned int day);
+void perceive_beliefs(configuration *c, uint_fast32_t day);
 
 // Perform actions for all agents.
 //
 // The caller has ownership of all pointers.
-void perform_actions(configuration *c, unsigned int day);
+void perform_actions(configuration *c, uint_fast32_t day);
 
 // Tick for the time.
 //
 // Perceives beliefs then performs actions.
 //
 // The caller has ownership of all pointers.
-void tick(configuration *c, unsigned int day);
+void tick(configuration *c, uint_fast32_t day);
 
 // Tick between the start time (inclusive) and end time (exclusive).
 //
 // The caller has ownership of all pointers.
-void tick_between(configuration *c, unsigned int start, unsigned int end);
+void tick_between(configuration *c, uint_fast32_t start, uint_fast32_t end);
 
 #endif // CONTAGENT_H

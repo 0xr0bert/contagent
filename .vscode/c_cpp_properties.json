@@ -4,7 +4,8 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/usr/include/glib-2.0"
+                "/usr/include/glib-2.0",
+                "/usr/lib64/glib-2.0/include/"
             ],
             "defines": [],
             "compilerPath": "/usr/lib/llvm/17/bin/clang",
