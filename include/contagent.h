@@ -195,7 +195,7 @@ void tick(configuration *c, uint_fast32_t day);
 // The caller has ownership of all pointers.
 void tick_between(configuration *c, uint_fast32_t start, uint_fast32_t end);
 
-// Run the simulatino given some configuration.
+// Run the simulation given some configuration.
 void run(configuration *c);
 
 #endif // CONTAGENT_H
