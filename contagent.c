@@ -374,6 +374,47 @@ void run(configuration *c) {
 
 static void free_uint_fast32_t(void *v) { free((uint_fast32_t *)v); }
 
+static void sum_activation(void *key, void *data, void *acc) {
+  belief *b = (belief *)key;
+  double *act = (double *)data;
+  GHashTable *summed_act_ght = (GHashTable *)acc;
+  double *summed_act = g_hash_table_lookup(summed_act_ght, b);
+
+  if (summed_act == NULL) {
+    summed_act = malloc(sizeof(double));
+    *summed_act = 0.0;
+    g_hash_table_replace(summed_act_ght, b, summed_act);
+  }
+
+  if (act != NULL && *act != 0.0) {
+    *summed_act += *act;
+  }
+}
+
+static void divide_activation(__attribute__((unused)) void *key, void *data,
+                              void *div) {
+  double *act = (double *)data;
+  uint_fast32_t *divisor = (uint_fast32_t *)div;
+
+  if (act != NULL && *act != 0.0) {
+    *act /= *divisor;
+  }
+}
+
+GHashTable *config_calculate_mean_activation(configuration *c,
+                                             uint_fast32_t time) {
+  GHashTable *ght = g_hash_table_new_full(NULL, NULL, NULL, free_double);
+  for (uint_fast32_t i = 0; i < c->agents->len; ++i) {
+    agent *a = g_array_index(c->agents, agent *, i);
+    GHashTable *acts = a->activations[time];
+    g_hash_table_foreach(acts, sum_activation, ght);
+  }
+
+  g_hash_table_foreach(ght, divide_activation, &c->agents->len);
+
+  return ght;
+}
+
 static void free_garray(void *v) {
   GArray *a = (GArray *)v;
   g_array_unref(a);

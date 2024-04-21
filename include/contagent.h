@@ -197,6 +197,16 @@ void tick_between(configuration *c, uint_fast32_t start, uint_fast32_t end);
 // Run the simulation given some configuration.
 void run(configuration *c);
 
+// Get the mean activation towards each belief at the time.
+//
+// Returns a GHashTable from belief* to double*, which the caller
+// takes ownership of. A delete function exists on the values of
+// the GHashTable.
+//
+// The caller has ownership of all pointers.
+GHashTable *config_calculate_mean_activation(configuration *c,
+                                             uint_fast32_t time);
+
 // Get the median activation towards each belief at the time.
 //
 // Returns a GHashTable from belief* to double*, which the caller
