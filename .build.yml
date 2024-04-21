@@ -3,6 +3,7 @@ packages:
   - meson
   - libglib2.0-dev
   - pkg-config
+  - clang
 sources:
   - https://git.sr.ht/~ragreener1/contagent
 triggers:
@@ -12,7 +13,7 @@ triggers:
 tasks:
   - setup: |
       cd contagent
-      meson setup builddir
+      CC=clang meson setup builddir
   - compile: |
       cd contagent
       ninja -C builddir
