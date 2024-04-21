@@ -102,7 +102,7 @@ double agent_contextualize(const agent *a, const uint_fast32_t day, belief *b,
 GHashTable *agent_get_actions_of_friends(const agent *a,
                                          const uint_fast32_t day);
 
-// The pressure towards adopting b based upon the actions of a's friends.
+// The pressure towards adopting b based upon the actions of friends.
 //
 // This is the perception based upon their behaviour, multiplied by
 // friend weights.
@@ -112,7 +112,7 @@ GHashTable *agent_get_actions_of_friends(const agent *a,
 // agent_get_actions_of_friends.
 //
 // The caller has ownership of all pointers.
-double agent_pressure(const agent *a, belief *b,
+double agent_pressure(belief *b,
                       GHashTable *actions_of_friends);
 
 // Calculate the change in activation towards some belief b at a given time
@@ -194,5 +194,8 @@ void tick(configuration *c, uint_fast32_t day);
 //
 // The caller has ownership of all pointers.
 void tick_between(configuration *c, uint_fast32_t start, uint_fast32_t end);
+
+// Run the simulatino given some configuration.
+void run(configuration *c);
 
 #endif // CONTAGENT_H

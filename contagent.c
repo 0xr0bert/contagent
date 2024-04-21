@@ -102,7 +102,7 @@ void add_to_actions(void *friend_v, void *weight_v, void *acc_v) {
   g_hash_table_replace(acc->actions, action, new_val);
 }
 
-void free_double(void *v) { free((double *)v); }
+static void free_double(void *v) { free((double *)v); }
 
 GHashTable *agent_get_actions_of_friends(const agent *a,
                                          const uint_fast32_t day) {
@@ -135,8 +135,7 @@ void add_to_pressure(void *action_v, void *w_v, void *acc_v) {
   acc->pressure += *perception * *w;
 }
 
-double agent_pressure(const agent *a, belief *b,
-                      GHashTable *actions_of_friends) {
+double agent_pressure(belief *b, GHashTable *actions_of_friends) {
   uint_fast32_t size = g_hash_table_size(actions_of_friends);
 
   pressure_acc acc;
@@ -155,7 +154,7 @@ double agent_pressure(const agent *a, belief *b,
 double agent_activation_change(const agent *a, const uint_fast32_t day,
                                belief *b, const GArray *beliefs,
                                GHashTable *actions_of_friends) {
-  double pressure = agent_pressure(a, b, actions_of_friends);
+  double pressure = agent_pressure(b, actions_of_friends);
 
   if (pressure >= 0.0) {
     return 1.0 + agent_contextualize(a, day, b, beliefs);
@@ -204,13 +203,16 @@ void agent_update_activation_for_all_beliefs(agent *a, const uint_fast32_t day,
   g_hash_table_unref(actions_of_friends);
 }
 
-gboolean filter_negative_probabilities(void *key, void *value_v, void *data) {
+gboolean filter_negative_probabilities(__attribute__((unused)) void *key,
+                                       void *value_v,
+                                       __attribute__((unused)) void *data) {
   double *value = (double *)value_v;
 
   return *value >= 0.0;
 }
 
-void calculate_normalizing_factor(void *key, void *value_v, void *acc_v) {
+void calculate_normalizing_factor(__attribute__((unused)) void *key,
+                                  void *value_v, void *acc_v) {
   double *acc = (double *)acc_v;
   double *value = (double *)value_v;
   *acc += *value;
@@ -336,5 +338,34 @@ void tick(configuration *c, uint_fast32_t day) {
 void tick_between(configuration *c, uint_fast32_t start, uint_fast32_t end) {
   for (uint_fast32_t i = start; i < end; ++i) {
     tick(c, i);
+  }
+}
+
+void run(configuration *c) {
+  char *template = "Starting simulation: {"
+                   "\"start\":%lu, "
+                   "\"end\":%lu, "
+                   "\"n_beliefs\":%lu, "
+                   "\"n_behaviours\":%lu, "
+                   "\"n_agents\":%lu";
+  size_t len = snprintf(NULL, 0, template, c->start_time, c->end_time,
+                        c->beliefs->len, c->behaviours->len, c->agents->len) +
+               1;
+
+  char *log_str = malloc(sizeof(char) * len);
+  snprintf(log_str, len, template, c->start_time, c->end_time, c->beliefs->len,
+           c->behaviours->len, c->agents->len);
+
+  logger(0, log_str);
+  free(log_str);
+
+  tick_between(c, c->start_time, c->end_time);
+
+  logger(c->end_time, "Simulation complete; serializing output");
+
+  if (c->full_output) {
+    // TODO: Serialize full output.
+  } else {
+    // TODO: Serialize summary output.
   }
 }
