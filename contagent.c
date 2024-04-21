@@ -374,6 +374,81 @@ void run(configuration *c) {
 
 static void free_uint_fast32_t(void *v) { free((uint_fast32_t *)v); }
 
+static void free_garray(void *v) {
+  GArray *a = (GArray *)v;
+  g_array_unref(a);
+}
+
+static void add_to_activations_by_belief(void *key, void *data, void *acc) {
+  belief *b = (belief *)key;
+  double *act = (double *)data;
+  GHashTable *acts_by_beliefs = (GHashTable *)acc;
+  double actual_act = act == NULL ? 0.0 : *act;
+
+  GArray *acts = g_hash_table_lookup(acts_by_beliefs, b);
+
+  if (acts == NULL) {
+    exit(-10);
+  } else {
+    g_array_append_val(acts, actual_act);
+  }
+}
+
+static int double_cmp(const void *d1_v, const void *d2_v) {
+  double *d1 = (double *)d1_v;
+  double *d2 = (double *)d2_v;
+  if (d1 < d2) {
+    return -1;
+  } else if (d1 == d2) {
+    return 0;
+  } else {
+    return 1;
+  }
+}
+
+GHashTable *config_calculate_median_activation(configuration *c,
+                                               uint_fast32_t time) {
+  GHashTable *activations_by_belief =
+      g_hash_table_new_full(NULL, NULL, NULL, free_garray);
+  for (uint_fast32_t i = 0; i < c->beliefs->len; ++i) {
+    belief *b = g_array_index(c->beliefs, belief *, i);
+    GArray *acts =
+        g_array_sized_new(FALSE, TRUE, sizeof(double), c->agents->len);
+    g_hash_table_replace(activations_by_belief, b, acts);
+  }
+
+  for (uint_fast32_t i = 0; i < c->agents->len; ++i) {
+    agent *a = g_array_index(c->agents, agent *, i);
+    GHashTable *activations = a->activations[time];
+    g_hash_table_foreach(activations, add_to_activations_by_belief,
+                         activations_by_belief);
+  }
+
+  GHashTable *median_activations =
+      g_hash_table_new_full(NULL, NULL, NULL, free_double);
+
+  uint_fast32_t ix = c->agents->len / 2;
+
+  for (uint_fast32_t i = 0; i < c->beliefs->len; ++i) {
+    belief *b = g_array_index(c->beliefs, belief *, i);
+    GArray *acts = g_hash_table_lookup(activations_by_belief, b);
+    g_array_sort(acts, double_cmp);
+
+    double median = g_array_index(acts, double, ix);
+
+    if (c->agents->len % 2 == 0) {
+      median = (median + g_array_index(acts, double, ix + 1)) / 2.0;
+    }
+
+    double *median_heaped = malloc(sizeof(double));
+    *median_heaped = median;
+    g_hash_table_replace(median_activations, b, median_heaped);
+  }
+
+  g_hash_table_unref(activations_by_belief);
+  return median_activations;
+}
+
 static void add_to_nonzero_activation(void *key, void *data, void *acc) {
   belief *b = (belief *)key;
   double *act = (double *)data;
