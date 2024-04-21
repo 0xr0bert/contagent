@@ -393,7 +393,7 @@ static void add_to_nonzero_activation(void *key, void *data, void *acc) {
 GHashTable *config_calculate_nonzero_activation(configuration *c,
                                                 uint_fast32_t time) {
   GHashTable *ght = g_hash_table_new_full(NULL, NULL, NULL, free_uint_fast32_t);
-  for (uint_fast32_t i; i < c->agents->len; ++i) {
+  for (uint_fast32_t i = 0; i < c->agents->len; ++i) {
     agent *a = g_array_index(c->agents, agent *, i);
     GHashTable *activations = a->activations[time];
     g_hash_table_foreach(activations, add_to_nonzero_activation, ght);
@@ -405,13 +405,13 @@ GHashTable *config_calculate_nonzero_activation(configuration *c,
 GHashTable *config_calculate_n_performers(configuration *c,
                                           uint_fast32_t time) {
   GHashTable *ght = g_hash_table_new_full(NULL, NULL, NULL, free_uint_fast32_t);
-  for (uint_fast32_t i; i < c->agents->len; ++i) {
+  for (uint_fast32_t i = 0; i < c->agents->len; ++i) {
     agent *a = g_array_index(c->agents, agent *, i);
     uint_fast32_t *val = g_hash_table_lookup(ght, a->actions[time]);
     if (val == NULL) {
       val = malloc(sizeof(uint_fast32_t));
       *val = 0;
-      g_hash_table_replace(ght, a->actions[time], free_uint_fast32_t);
+      g_hash_table_replace(ght, a->actions[time], val);
     }
     ++(*val);
   }
