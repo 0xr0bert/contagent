@@ -32,22 +32,20 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "glib.h"
 #include <stdint.h>
 
-typedef unsigned char uuid[16];
-
 typedef struct _behaviour {
   char *name;
-  uuid uuid;
+  unsigned char uuid[16];
 } behaviour;
 
 typedef struct _belief {
   char *name;
-  uuid uuid;
+  unsigned char uuid[16];
   GHashTable *perceptions;
   GHashTable *relationships;
 } belief;
 
 typedef struct _agent {
-  uuid uuid;
+  unsigned char uuid[16];
   uint_fast32_t n_days;
   GHashTable **activations;
   GHashTable *friends;
@@ -65,9 +63,14 @@ typedef struct _configuration {
   unsigned char full_output;
 } configuration;
 
+// Generate a random uuid v4, saving it to uuid_to_set.
+//
+// The caller has ownership of all pointers.
+void random_uuid_v4(unsigned char *uuid_to_set);
+
 // Log a message for a given day.
 //
-// The caller has ownership over all pointers.
+// The caller has ownership of all pointers.
 void logger(const uint_fast32_t day, const char *message);
 
 // The weighted relationship is the relationship between two beliefs

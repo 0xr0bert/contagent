@@ -33,6 +33,19 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <stdlib.h>
 
+void random_uuid_v4(unsigned char *uuid_to_set) {
+  for (uint_fast8_t i = 0; i < 16; ++i) {
+    uuid_to_set[i] = rand() & 0xFF; // Get last byte of random number
+  }
+
+  // Set 4 most significant bits of time_hi_and_version: 0100 (4)
+  uuid_to_set[6] = (uuid_to_set[6] & 0x0F) | 0x4F;
+
+  // Set 2 most significant bits of clock_seq_hi_and_reserved to 0 and 1
+  // respectively.
+  uuid_to_set[8] = (uuid_to_set[8] & 0x3F) | 0x7F;
+}
+
 void logger(const uint_fast32_t day, const char *message) {
   printf("[time: %lu]: %s\n", day, message);
 }
