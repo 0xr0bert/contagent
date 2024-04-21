@@ -112,8 +112,7 @@ GHashTable *agent_get_actions_of_friends(const agent *a,
 // agent_get_actions_of_friends.
 //
 // The caller has ownership of all pointers.
-double agent_pressure(belief *b,
-                      GHashTable *actions_of_friends);
+double agent_pressure(belief *b, GHashTable *actions_of_friends);
 
 // Calculate the change in activation towards some belief b at a given time
 // and all the beliefs in the model and the actions of the friends.
@@ -197,5 +196,14 @@ void tick_between(configuration *c, uint_fast32_t start, uint_fast32_t end);
 
 // Run the simulation given some configuration.
 void run(configuration *c);
+
+// Get the number of agents who performed each behaviour at the time.
+//
+// Returns a GHashTable from behaviour* to uint_fast32_t*, which the caller
+// takes ownership of. A delete function exists on the values of
+// the GHashTable.
+//
+// The caller has ownership of all pointers.
+GHashTable *config_calculate_n_performers(configuration *c, uint_fast32_t time);
 
 #endif // CONTAGENT_H

@@ -369,3 +369,22 @@ void run(configuration *c) {
     // TODO: Serialize summary output.
   }
 }
+
+static void free_uint_fast32_t(void *v) { free((uint_fast32_t *)v); }
+
+GHashTable *config_calculate_n_performers(configuration *c,
+                                          uint_fast32_t time) {
+  GHashTable *ght = g_hash_table_new_full(NULL, NULL, NULL, free_uint_fast32_t);
+  for (uint_fast32_t i; i < c->agents->len; ++i) {
+    agent *a = g_array_index(c->agents, agent *, i);
+    uint_fast32_t *val = g_hash_table_lookup(ght, a->actions[time]);
+    if (val == NULL) {
+      val = malloc(sizeof(uint_fast32_t));
+      *val = 0;
+      g_hash_table_replace(ght, a->actions[time], free_uint_fast32_t);
+    }
+    ++(*val);
+  }
+
+  return ght;
+}
