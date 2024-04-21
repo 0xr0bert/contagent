@@ -73,7 +73,7 @@ double agent_contextualize(const agent *a, const uint_fast32_t day, belief *b,
   }
 }
 
-typedef struct action_acc {
+typedef struct _action_acc {
   GHashTable *actions;
   uint_fast32_t day;
 } action_acc;
@@ -104,7 +104,7 @@ GHashTable *agent_get_actions_of_friends(const agent *a,
   return actions;
 }
 
-typedef struct pressure_acc {
+typedef struct _pressure_acc {
   double pressure;
   belief *belief;
 } pressure_acc;
@@ -203,7 +203,7 @@ void calculate_normalizing_factor(void *key, void *value_v, void *acc_v) {
   *acc += *value;
 }
 
-typedef struct chosen_behaviour_acc {
+typedef struct _chosen_behaviour_acc {
   behaviour *behaviour;
   double rv;
   double weight;

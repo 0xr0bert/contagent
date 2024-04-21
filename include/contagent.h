@@ -34,19 +34,19 @@ POSSIBILITY OF SUCH DAMAGE.
 
 typedef unsigned char uuid[16];
 
-typedef struct behaviour {
+typedef struct _behaviour {
   char *name;
   uuid uuid;
 } behaviour;
 
-typedef struct belief {
+typedef struct _belief {
   char *name;
   uuid uuid;
   GHashTable *perceptions;
   GHashTable *relationships;
 } belief;
 
-typedef struct agent {
+typedef struct _agent {
   uuid uuid;
   uint_fast32_t n_days;
   GHashTable **activations;
@@ -56,7 +56,7 @@ typedef struct agent {
   GHashTable *performance_relationships;
 } agent;
 
-typedef struct configuration {
+typedef struct _configuration {
   GArray *behaviours;
   GArray *beliefs;
   GArray *agents;
