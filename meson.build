@@ -8,5 +8,7 @@ project(
 )
 
 incdir = include_directories('include')
+cc = meson.get_compiler('c')
+m_dep = cc.find_library('m', required : true)
 glib = dependency('glib-2.0')
-library('contagent', 'contagent.c', include_directories : incdir, dependencies: glib)
+library('contagent', 'contagent.c', include_directories : incdir, dependencies: [m_dep, glib])

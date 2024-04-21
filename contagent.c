@@ -30,6 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "contagent.h"
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -413,6 +414,56 @@ GHashTable *config_calculate_mean_activation(configuration *c,
   g_hash_table_foreach(ght, divide_activation, &c->agents->len);
 
   return ght;
+}
+
+typedef struct _sd_acc {
+  GHashTable *sd_sums;
+  GHashTable *means;
+} sd_acc;
+
+static void sum_activation_sq_diff(void *key, void *data, void *acc) {
+  belief *b = (belief *)key;
+  double *act = (double *)data;
+  sd_acc *s = (sd_acc *)acc;
+  double *summed_sq_diff = g_hash_table_lookup(s->sd_sums, b);
+
+  if (summed_sq_diff == NULL) {
+    summed_sq_diff = malloc(sizeof(double));
+    *summed_sq_diff = 0.0;
+    g_hash_table_replace(s->sd_sums, b, summed_sq_diff);
+  }
+
+  double *mean = g_hash_table_lookup(s->means, b);
+  double mean_v = mean == NULL ? 0.0 : *mean;
+
+  double act_v = act == NULL ? 0.0 : *act;
+  *summed_sq_diff += pow((act_v - mean_v), 2);
+}
+
+static void calculate_sd_for_each(__attribute__((unused)) void *key, void *data,
+                                  void *n_v) {
+  double *v = data;
+  uint_fast64_t *n = n_v;
+
+  *v = sqrt(*v / (*n - 1));
+}
+
+GHashTable *config_calculate_sd_activation(configuration *c, uint_fast32_t time,
+                                           GHashTable *mean_activations) {
+  GHashTable *sds = g_hash_table_new_full(NULL, NULL, NULL, free_double);
+
+  for (uint_fast32_t i = 0; i < c->agents->len; ++i) {
+    agent *a = g_array_index(c->agents, agent *, i);
+    GHashTable *acts = a->activations[time];
+    sd_acc acc;
+    acc.sd_sums = sds;
+    acc.means = mean_activations;
+    g_hash_table_foreach(acts, sum_activation_sq_diff, &acc);
+  }
+
+  g_hash_table_foreach(sds, calculate_sd_for_each, &c->agents->len);
+
+  return sds;
 }
 
 static void free_garray(void *v) {

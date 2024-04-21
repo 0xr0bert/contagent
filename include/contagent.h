@@ -207,6 +207,20 @@ void run(configuration *c);
 GHashTable *config_calculate_mean_activation(configuration *c,
                                              uint_fast32_t time);
 
+// Get the sample standard deviation activation towards each belief at the time.
+//
+// mean_activations is a map from belief * to double * with the mean activation
+// of that belief. This can be calculated using
+// config_calculate_mean_activation.
+//
+// Returns a GHashTable from belief* to double*, which the caller
+// takes ownership of. A delete function exists on the values of
+// the GHashTable.
+//
+// The caller has ownership of all pointers.
+GHashTable *config_calculate_sd_activation(configuration *c, uint_fast32_t time,
+                                           GHashTable *mean_activations);
+
 // Get the median activation towards each belief at the time.
 //
 // Returns a GHashTable from belief* to double*, which the caller
