@@ -374,6 +374,34 @@ void run(configuration *c) {
 
 static void free_uint_fast32_t(void *v) { free((uint_fast32_t *)v); }
 
+static void add_to_nonzero_activation(void *key, void *data, void *acc) {
+  belief *b = (belief *)key;
+  double *act = (double *)data;
+  GHashTable *nonzero_m = (GHashTable *)acc;
+
+  if (act != NULL && *act != 0.0) {
+    uint_fast32_t *v = g_hash_table_lookup(nonzero_m, b);
+    if (v == NULL) {
+      v = malloc(sizeof(uint_fast32_t));
+      *v = 0;
+      g_hash_table_replace(nonzero_m, b, v);
+    }
+    ++(*v);
+  }
+}
+
+GHashTable *config_calculate_nonzero_activation(configuration *c,
+                                                uint_fast32_t time) {
+  GHashTable *ght = g_hash_table_new_full(NULL, NULL, NULL, free_uint_fast32_t);
+  for (uint_fast32_t i; i < c->agents->len; ++i) {
+    agent *a = g_array_index(c->agents, agent *, i);
+    GHashTable *activations = a->activations[time];
+    g_hash_table_foreach(activations, add_to_nonzero_activation, ght);
+  }
+
+  return ght;
+}
+
 GHashTable *config_calculate_n_performers(configuration *c,
                                           uint_fast32_t time) {
   GHashTable *ght = g_hash_table_new_full(NULL, NULL, NULL, free_uint_fast32_t);
