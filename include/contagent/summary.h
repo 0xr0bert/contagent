@@ -34,7 +34,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #define CONTAGENT_SUMMARY_H
 
 #include "contagent/types.h"
-#include <math.h>
 
 /// @brief Sum activation into an accumulator.
 /// @param key The belief * which the caller has ownership of.

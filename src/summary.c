@@ -30,6 +30,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "contagent/summary.h"
 #include "contagent/util.h"
 
+#include <math.h>
+
 void summary_sum_activation(void *key, void *data, void *acc) {
   belief *b = (belief *)key;
   double *act = (double *)data;
