@@ -17,3 +17,6 @@ tasks:
   - compile: |
       cd contagent
       ninja -C builddir
+  - test: |
+      cd contagent/builddir
+      ./contagent_test
