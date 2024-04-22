@@ -27,22 +27,22 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 */
-#include <check.h>
 #include "check_summary.h"
+#include <check.h>
 
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
 
 int main(void) {
-    int number_failed = 0;
-    Suite *s;
-    SRunner *sr;
-    
-    s = summary_suite();
-    sr = srunner_create(s);
+  int number_failed = 0;
+  Suite *s;
+  SRunner *sr;
 
-    srunner_run_all(sr, CK_NORMAL);
-    number_failed = srunner_ntests_failed(sr);
-    srunner_free(sr);
-    return number_failed == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
+  s = summary_suite();
+  sr = srunner_create(s);
+
+  srunner_run_all(sr, CK_NORMAL);
+  number_failed = srunner_ntests_failed(sr);
+  srunner_free(sr);
+  return number_failed == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
 }

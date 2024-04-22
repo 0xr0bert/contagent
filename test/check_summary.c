@@ -28,39 +28,58 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 */
 #include "check_summary.h"
-#include <check.h>
+#include "contagent/summary.h"
 #include "contagent/types.h"
 #include "contagent/util.h"
-#include "contagent/summary.h"
+#include <check.h>
 
-START_TEST(test_sum_activation) {
-    belief *bs = malloc(sizeof(belief) * 4);
-    GHashTable *acc = g_hash_table_new_full(NULL, NULL, NULL, free_double);
+START_TEST(test_sum_activation_when_not_null) {
+  belief *bs = malloc(sizeof(belief) * 4);
+  GHashTable *acc = g_hash_table_new_full(NULL, NULL, NULL, free_double);
 
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            double v = j;
-            summary_sum_activation(&bs[j], &v, acc);
-        }
+  for (int i = 0; i < 4; ++i) {
+    for (int j = 0; j < 4; ++j) {
+      double v = j;
+      summary_sum_activation(&bs[j], &v, acc);
     }
+  }
 
-    for (int i = 0; i < 4; ++i) {
-        // ck_assert_double_eq(*(double *) vs->pdata[i], 4*i);
-        ck_assert_double_eq(*(double *)g_hash_table_lookup(acc, &bs[i]), 4*i);
+  for (int i = 0; i < 4; ++i) {
+    ck_assert_double_eq(*(double *)g_hash_table_lookup(acc, &bs[i]), 4 * i);
+  }
+  g_hash_table_unref(acc);
+  free(bs);
+}
+END_TEST
+
+START_TEST(test_sum_activation_when_null) {
+  belief *bs = malloc(sizeof(belief) * 4);
+  GHashTable *acc = g_hash_table_new_full(NULL, NULL, NULL, free_double);
+
+  for (int i = 0; i < 4; ++i) {
+    for (int j = 0; j < 4; ++j) {
+      summary_sum_activation(&bs[j], NULL, acc);
     }
-    g_hash_table_unref(acc);
-    free(bs);
-} END_TEST
+  }
+
+  for (int i = 0; i < 4; ++i) {
+    ck_assert_double_eq(*(double *)g_hash_table_lookup(acc, &bs[i]), 0.0);
+  }
+  g_hash_table_unref(acc);
+  free(bs);
+}
+END_TEST
 
 Suite *summary_suite(void) {
-    Suite *s;
-    TCase *tc_core;
+  Suite *s;
+  TCase *tc_core;
 
-    s = suite_create("Summary");
-    tc_core = tcase_create("Core");
-    
-    tcase_add_test(tc_core, test_sum_activation);
-    suite_add_tcase(s, tc_core);
+  s = suite_create("Summary");
+  tc_core = tcase_create("Core");
 
-    return s;
+  tcase_add_test(tc_core, test_sum_activation_when_not_null);
+  tcase_add_test(tc_core, test_sum_activation_when_null);
+  suite_add_tcase(s, tc_core);
+
+  return s;
 }
