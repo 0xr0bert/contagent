@@ -4,6 +4,7 @@ packages:
   - libglib2.0-dev
   - pkg-config
   - clang
+  - check
 sources:
   - https://git.sr.ht/~ragreener1/contagent
 triggers:
