@@ -19,5 +19,6 @@ Use meson to build.
 
 To report a bug or for any discussion, please email [~ragreener1/public-inbox@lists.sr.ht](mailto:~ragreener1/public-inbox@lists.sr.ht).
 
+Please use clang-format to format the code.
 To submit a [patch](https://git-send-email.io/), please sign-it-off (`-s` flag in git) to indicate you certify the [statement of origin](https://developercertificate.org/) and then email it to [~ragreener1/public-inbox@lists.sr.ht](mailto:~ragreener1/public-inbox@lists.sr.ht).
 Please also add the project name to the subject, i.e., `[PATCH contagent]`.
