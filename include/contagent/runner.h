@@ -27,13 +27,35 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef CONTAGENT_H
-#define CONTAGENT_H
+#ifndef CONTAGENT_RUNNER_H
+#define CONTAGENT_RUNNER_H
 
-#include "contagent/agent.h"
-#include "contagent/runner.h"
-#include "contagent/summary.h"
 #include "contagent/types.h"
-#include "contagent/util.h"
 
-#endif // CONTAGENT_H
+// Perceive beliefs for all agents.
+//
+// The caller has ownership of all pointers.
+void runner_perceive_beliefs(configuration *c, uint_fast32_t day);
+
+// Perform actions for all agents.
+//
+// The caller has ownership of all pointers.
+void runner_perform_actions(configuration *c, uint_fast32_t day);
+
+// Tick for the time.
+//
+// Perceives beliefs then performs actions.
+//
+// The caller has ownership of all pointers.
+void runner_tick(configuration *c, uint_fast32_t day);
+
+// Tick between the start time (inclusive) and end time (exclusive).
+//
+// The caller has ownership of all pointers.
+void runner_tick_between(configuration *c, uint_fast32_t start,
+                         uint_fast32_t end);
+
+// Run the simulation given some configuration.
+void runner_run(configuration *c);
+
+#endif // CONTAGENT_RUNNER_H

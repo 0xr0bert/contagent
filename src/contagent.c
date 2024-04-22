@@ -27,13 +27,6 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef CONTAGENT_H
-#define CONTAGENT_H
 
-#include "contagent/agent.h"
-#include "contagent/runner.h"
-#include "contagent/summary.h"
-#include "contagent/types.h"
-#include "contagent/util.h"
+#include "contagent.h"
 
-#endif // CONTAGENT_H
