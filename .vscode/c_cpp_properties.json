@@ -2,15 +2,13 @@
     "configurations": [
         {
             "name": "Linux",
-            "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/contagent-lib/include"
-            ],
+            "includePath": [],
             "defines": [],
             "compilerPath": "/usr/lib/llvm/17/bin/clang",
             "cStandard": "c17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "linux-clang-x64"
+            "cppStandard": "c++20",
+            "intelliSenseMode": "linux-clang-x64",
+            "compileCommands": "builddir/compile_commands.json"
         }
     ],
     "version": 4
