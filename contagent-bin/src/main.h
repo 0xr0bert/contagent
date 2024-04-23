@@ -51,7 +51,7 @@ load_beliefs(const std::string &file_path,
              const std::vector<std::shared_ptr<Behaviour>> &behaviours);
 
 std::vector<std::shared_ptr<Agent>>
-load_agents(const std::istream &is,
+load_agents(const std::string &file_path,
             const std::vector<std::shared_ptr<Behaviour>> &behaviours,
             const std::vector<std::shared_ptr<Belief>> &beliefs,
             const uint_fast32_t n_days);
@@ -60,7 +60,7 @@ template <class U>
 concept CheckUUIDd = std::is_base_of<UUIDd, U>::value;
 
 template <class T>
-  requires CheckUUIDd<T>
+requires CheckUUIDd<T>
 std::map<boost::uuids::uuid, std::shared_ptr<T>>
 vector_to_uuid_map(const std::vector<std::shared_ptr<T>> &vec);
 
