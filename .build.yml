@@ -1,22 +1,20 @@
-image: debian/stable
+image: alpine/latest
 packages:
   - meson
-  - libgoogle-glog-dev
-  - nlohmann-json3-dev
-  - libboost-all-dev
-  - pkg-config
+  - glog-dev
+  - nlohmann-json
+  - boost-dev
+  - clang17
 sources:
-  - git@git.sr.ht:~ragreener1/contagent
+  - https://git.sr.ht/~ragreener1/contagent
 triggers:
   - action: email
     condition: failure
-    to: ~ragreener1/contagent-devel@lists.sr.ht
-secrets:
-  - 60919306-69a2-4760-8001-1a12c14454ab
+    to: ~ragreener1/public-inbox@lists.sr.ht
 tasks:
   - setup: |
       cd contagent
-      meson setup builddir
+      CC=clang CXX=clang++ meson setup builddir
   - compile: |
       cd contagent
       ninja -C builddir
