@@ -29,31 +29,31 @@
 #ifndef CONTAGENT_CONFIGURATION_H
 #define CONTAGENT_CONFIGURATION_H
 
-#include <memory>
-#include <vector>
 #include "agent.h"
 #include "behaviour.h"
 #include "belief.h"
+#include <memory>
+#include <vector>
 namespace contagent {
 
 class Configuration {
- public:
-  Configuration(const std::vector<std::shared_ptr<Behaviour>>& behaviours,
-                const std::vector<std::shared_ptr<Belief>>& beliefs,
-                const std::vector<std::shared_ptr<Agent>>& agents,
+public:
+  Configuration(const std::vector<std::shared_ptr<Behaviour>> &behaviours,
+                const std::vector<std::shared_ptr<Belief>> &beliefs,
+                const std::vector<std::shared_ptr<Agent>> &agents,
                 uint_fast32_t start_time, uint_fast32_t end_time,
                 std::unique_ptr<std::ostream> output_stream, bool full_output);
 
-  [[nodiscard]] const std::vector<std::shared_ptr<Behaviour>>& getBehaviours()
-      const;
-  [[nodiscard]] const std::vector<std::shared_ptr<Belief>>& getBeliefs() const;
-  [[nodiscard]] const std::vector<std::shared_ptr<Agent>>& getAgents() const;
-  [[nodiscard]] uint_fast32_t getStartTime() const;
-  [[nodiscard]] uint_fast32_t getEndTime() const;
-  [[nodiscard]] const std::unique_ptr<std::ostream>& getOutputStream() const;
-  [[nodiscard]] bool getFullOutput() const;
+  [[nodiscard]] const std::vector<std::shared_ptr<Behaviour>> &
+  get_behaviours() const;
+  [[nodiscard]] const std::vector<std::shared_ptr<Belief>> &get_beliefs() const;
+  [[nodiscard]] const std::vector<std::shared_ptr<Agent>> &get_agents() const;
+  [[nodiscard]] uint_fast32_t get_start_time() const;
+  [[nodiscard]] uint_fast32_t get_end_time() const;
+  [[nodiscard]] const std::unique_ptr<std::ostream> &get_output_stream() const;
+  [[nodiscard]] bool get_full_output() const;
 
- private:
+private:
   const std::vector<std::shared_ptr<Behaviour>> behaviours_;
   const std::vector<std::shared_ptr<Belief>> beliefs_;
   const std::vector<std::shared_ptr<Agent>> agents_;
@@ -63,6 +63,6 @@ class Configuration {
   const bool full_output_;
 };
 
-}  // namespace contagent
+} // namespace contagent
 
-#endif  //CONTAGENT_CONFIGURATION_H
+#endif // CONTAGENT_CONFIGURATION_H

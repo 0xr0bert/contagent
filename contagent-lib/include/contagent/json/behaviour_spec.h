@@ -44,7 +44,7 @@ public:
   std::string uuid;
   std::string name;
 
-  [[nodiscard]] std::shared_ptr<contagent::Behaviour> toBehaviour() const;
+  [[nodiscard]] std::shared_ptr<contagent::Behaviour> to_behaviour() const;
 };
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(BehaviourSpec, uuid, name)

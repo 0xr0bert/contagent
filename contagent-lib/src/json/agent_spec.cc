@@ -30,14 +30,15 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
-[[maybe_unused]] contagent::json::AgentSpec::AgentSpec(const contagent::Agent &agent)
-    : uuid(boost::lexical_cast<std::string>(agent.getUuid())) {
-  std::transform(agent.getActions().begin(), agent.getActions().end(),
+[[maybe_unused]] contagent::json::AgentSpec::AgentSpec(
+    const contagent::Agent &agent)
+    : uuid(boost::lexical_cast<std::string>(agent.get_uuid())) {
+  std::transform(agent.get_actions().begin(), agent.get_actions().end(),
                  std::back_inserter(actions), [](const auto &action) {
-                   return boost::lexical_cast<std::string>(action->getUuid());
+                   return boost::lexical_cast<std::string>(action->get_uuid());
                  });
 
-  std::transform(agent.getActivations().begin(), agent.getActivations().end(),
+  std::transform(agent.get_activations().begin(), agent.get_activations().end(),
                  std::back_inserter(activations), [](const auto &m) {
                    std::unordered_map<std::string, double_t> new_m;
 
@@ -54,7 +55,7 @@
                    return new_m;
                  });
 
-  std::transform(agent.getDeltas().begin(), agent.getDeltas().end(),
+  std::transform(agent.get_deltas().begin(), agent.get_deltas().end(),
                  std::inserter(deltas, deltas.end()), [](const auto &pair) {
                    std::pair<std::string, double_t> new_pair(
                        boost::lexical_cast<std::string>(pair.first),
@@ -63,11 +64,11 @@
                  });
 
   std::transform(
-      agent.getFriends().begin(), agent.getFriends().end(),
+      agent.get_friends().begin(), agent.get_friends().end(),
       std::inserter(friends, friends.end()), [](const auto &pair) {
         if (auto shared_friend = pair.first.lock()) {
           return std::pair<std::string, double_t>(
-              boost::lexical_cast<std::string>(shared_friend->getUuid()),
+              boost::lexical_cast<std::string>(shared_friend->get_uuid()),
               pair.second);
         } else {
           throw std::runtime_error("Unable to lock weak pointer");
@@ -75,8 +76,8 @@
       });
 
   std::transform(
-      agent.getPerformanceRelationships().begin(),
-      agent.getPerformanceRelationships().end(),
+      agent.get_performance_relationships().begin(),
+      agent.get_performance_relationships().end(),
       std::inserter(performance_relationships, performance_relationships.end()),
       [](const auto &outer_pair) {
         std::unordered_map<std::string, double_t> new_inner_map;
@@ -95,7 +96,7 @@
       });
 }
 
-std::shared_ptr<contagent::Agent> contagent::json::AgentSpec::toUnlinkedAgent(
+std::shared_ptr<contagent::Agent> contagent::json::AgentSpec::to_unlinked_agent(
     uint_fast32_t n_days,
     const std::map<boost::uuids::uuid, std::shared_ptr<Behaviour>> &behaviours,
     const std::map<boost::uuids::uuid, std::shared_ptr<Belief>> &beliefs)
@@ -112,7 +113,7 @@ std::shared_ptr<contagent::Agent> contagent::json::AgentSpec::toUnlinkedAgent(
                    return behaviours.at(u);
                  });
 
-  agent->setActions(actions_proper);
+  agent->set_actions(actions_proper);
 
   std::vector<std::unordered_map<std::shared_ptr<contagent::Belief>, double_t>>
       activations_proper;
@@ -140,7 +141,7 @@ std::shared_ptr<contagent::Agent> contagent::json::AgentSpec::toUnlinkedAgent(
         return activations_at_time_proper;
       });
 
-  agent->setActivations(activations_proper);
+  agent->set_activations(activations_proper);
 
   std::unordered_map<std::shared_ptr<contagent::Belief>, double_t>
       deltas_proper;
@@ -156,7 +157,7 @@ std::shared_ptr<contagent::Agent> contagent::json::AgentSpec::toUnlinkedAgent(
         return new_pair;
       });
 
-  agent->setDeltas(deltas_proper);
+  agent->set_deltas(deltas_proper);
 
   std::unordered_map<
       std::shared_ptr<contagent::Belief>,
@@ -196,12 +197,12 @@ std::shared_ptr<contagent::Agent> contagent::json::AgentSpec::toUnlinkedAgent(
         return new_outer_pair;
       });
 
-  agent->setPerformanceRelationships(performance_relationships_proper);
+  agent->set_performance_relationships(performance_relationships_proper);
 
   return agent;
 }
 
-void contagent::json::AgentSpec::linkAgents(
+void contagent::json::AgentSpec::link_agents(
     const std::map<boost::uuids::uuid, std::shared_ptr<Agent>> &agents) const {
   auto &agent = agents.at(boost::lexical_cast<boost::uuids::uuid>(uuid));
 
@@ -220,5 +221,5 @@ void contagent::json::AgentSpec::linkAgents(
         return new_pair;
       });
 
-  agent->setFriends(friends_proper);
+  agent->set_friends(friends_proper);
 }

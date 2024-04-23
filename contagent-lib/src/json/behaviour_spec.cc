@@ -32,11 +32,11 @@
 #include <boost/uuid/uuid_io.hpp>
 
 namespace contagent::json {
-std::shared_ptr<contagent::Behaviour> BehaviourSpec::toBehaviour() const {
+std::shared_ptr<contagent::Behaviour> BehaviourSpec::to_behaviour() const {
   auto uuid_v = boost::lexical_cast<boost::uuids::uuid>(uuid);
   return std::make_shared<contagent::Behaviour>(uuid_v, name);
 }
 BehaviourSpec::BehaviourSpec(const contagent::Behaviour &behaviour)
-    : uuid(boost::lexical_cast<std::string>(behaviour.getUuid())),
-      name(behaviour.getName()) {}
+    : uuid(boost::lexical_cast<std::string>(behaviour.get_uuid())),
+      name(behaviour.get_name()) {}
 } // namespace contagent::json

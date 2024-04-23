@@ -45,11 +45,11 @@ public:
   std::unordered_map<std::string, double_t> relationships;
   std::unordered_map<std::string, double_t> perceptions;
 
-  [[nodiscard]] std::shared_ptr<contagent::Belief> toUnlinkedBelief(
+  [[nodiscard]] std::shared_ptr<contagent::Belief> to_unlinked_belief(
       const std::map<boost::uuids::uuid, std::shared_ptr<Behaviour>>
           &behaviours) const;
 
-  void linkBeliefs(const std::map<boost::uuids::uuid, std::shared_ptr<Belief>>
+  void link_beliefs(const std::map<boost::uuids::uuid, std::shared_ptr<Belief>>
                        &beliefs) const;
 };
 

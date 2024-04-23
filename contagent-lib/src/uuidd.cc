@@ -34,6 +34,6 @@ contagent::UUIDd::UUIDd(boost::uuids::uuid uuid) noexcept : uuid_(uuid) {}
 contagent::UUIDd::UUIDd() noexcept
     : UUIDd(boost::uuids::random_generator_mt19937()()) {}
 
-const boost::uuids::uuid &contagent::UUIDd::getUuid() const noexcept {
+const boost::uuids::uuid &contagent::UUIDd::get_uuid() const noexcept {
   return uuid_;
 }

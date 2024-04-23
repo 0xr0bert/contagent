@@ -48,14 +48,14 @@ public:
   std::unordered_map<std::string, std::unordered_map<std::string, double_t>>
       performance_relationships;
 
-  [[nodiscard]] std::shared_ptr<contagent::Agent>
-  toUnlinkedAgent(uint_fast32_t n_days,
-                  const std::map<boost::uuids::uuid, std::shared_ptr<Behaviour>>
-                      &behaviours,
-                  const std::map<boost::uuids::uuid, std::shared_ptr<Belief>>
-                      &beliefs) const;
+  [[nodiscard]] std::shared_ptr<contagent::Agent> to_unlinked_agent(
+      uint_fast32_t n_days,
+      const std::map<boost::uuids::uuid, std::shared_ptr<Behaviour>>
+          &behaviours,
+      const std::map<boost::uuids::uuid, std::shared_ptr<Belief>> &beliefs)
+      const;
 
-  void linkAgents(
+  void link_agents(
       const std::map<boost::uuids::uuid, std::shared_ptr<Agent>> &agents) const;
 };
 

@@ -59,8 +59,8 @@ public:
   /// \param belief The belief related to this.
   /// \param relationship The new relationship weight.
   /// \author Robert Greener
-  [[maybe_unused]] void setRelationship(std::weak_ptr<Belief> &belief,
-                                        double_t relationship) noexcept;
+  [[maybe_unused]] void set_relationship(std::weak_ptr<Belief> &belief,
+                                         double_t relationship) noexcept;
 
   /// Set all the relationships, overriding the existing ones. This is the value
   /// that describes how adopting the other belief is affected by holding this
@@ -70,8 +70,8 @@ public:
   /// \param relationships The new relationships.
   /// \author Robert Greener
   [[maybe_unused]] void
-  setRelationships(std::map<std::weak_ptr<Belief>, double_t, std::owner_less<>>
-                       relationships) noexcept;
+  set_relationships(std::map<std::weak_ptr<Belief>, double_t, std::owner_less<>>
+                        relationships) noexcept;
 
   /// Get all the relationships. This is the value
   /// that describes how adopting the other belief is affected by holding this
@@ -82,7 +82,7 @@ public:
   /// \author Robert Greener
   [[nodiscard]] const std::map<std::weak_ptr<Belief>, double_t,
                                std::owner_less<>> &
-  getRelationships() const noexcept;
+  get_relationships() const noexcept;
 
   /// Set the perception. This is the amount that when observing a Behaviour,
   /// they can be assumes to be driven by this Belief. In a range of [-1,+1].
@@ -90,7 +90,7 @@ public:
   /// \param behaviour The Behaviour that could be observed.
   /// \param perception The new perception. In a range of [-1,+1].
   /// \author Robert Greener
-  [[maybe_unused]] void setPerception(std::weak_ptr<Behaviour> &behaviour,
+  [[maybe_unused]] void set_perception(std::weak_ptr<Behaviour> &behaviour,
                                       double_t perception) noexcept;
 
   /// Sets all the perceptions. This overwrites all the old perceptions. This is
@@ -100,7 +100,7 @@ public:
   /// \param perceptions The new perceptions. In a range of [-1,+1].
   /// \author Robert Greener
   [[maybe_unused]] void
-  setPerceptions(std::map<std::weak_ptr<Behaviour>, double_t, std::owner_less<>>
+  set_perceptions(std::map<std::weak_ptr<Behaviour>, double_t, std::owner_less<>>
                      perceptions) noexcept;
 
   /// Gets all the perceptions. This is the amount that when observing a
@@ -111,7 +111,7 @@ public:
   /// \author Robert Greener
   [[nodiscard]] const std::map<std::weak_ptr<Behaviour>, double_t,
                                std::owner_less<>> &
-  getPerceptions() const noexcept;
+  get_perceptions() const noexcept;
 
 private:
   /// This is the value

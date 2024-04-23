@@ -33,28 +33,28 @@
 namespace contagent::json {
 
 BeliefSpec::BeliefSpec(const contagent::Belief &belief) {
-  uuid = boost::lexical_cast<std::string>(belief.getUuid());
-  name = belief.getName();
+  uuid = boost::lexical_cast<std::string>(belief.get_uuid());
+  name = belief.get_name();
 
-  for (const auto &[b2, relationship] : belief.getRelationships()) {
+  for (const auto &[b2, relationship] : belief.get_relationships()) {
     if (auto p = b2.lock()) {
       relationships.insert(std::pair(
-          boost::lexical_cast<std::string>(p->getUuid()), relationship));
+          boost::lexical_cast<std::string>(p->get_uuid()), relationship));
     } else {
       throw std::runtime_error("Unable to lock weak pointer");
     }
   }
 
-  for (const auto &[behaviour, perception] : belief.getPerceptions()) {
+  for (const auto &[behaviour, perception] : belief.get_perceptions()) {
     if (auto p = behaviour.lock()) {
       perceptions.insert(std::pair(
-          boost::lexical_cast<std::string>(p->getUuid()), perception));
+          boost::lexical_cast<std::string>(p->get_uuid()), perception));
     } else {
       throw std::runtime_error("Unable to lock weak pointer");
     }
   }
 }
-std::shared_ptr<contagent::Belief> BeliefSpec::toUnlinkedBelief(
+std::shared_ptr<contagent::Belief> BeliefSpec::to_unlinked_belief(
     const std::map<boost::uuids::uuid, std::shared_ptr<Behaviour>> &behaviours)
     const {
   auto belief = std::make_shared<contagent::Belief>(
@@ -66,12 +66,12 @@ std::shared_ptr<contagent::Belief> BeliefSpec::toUnlinkedBelief(
     const auto &actual_behaviour = behaviours.at(behaviour_uuid);
     std::weak_ptr<contagent::Behaviour> weak_behaviour = actual_behaviour;
 
-    belief->setPerception(weak_behaviour, perception);
+    belief->set_perception(weak_behaviour, perception);
   }
 
   return belief;
 }
-void BeliefSpec::linkBeliefs(
+void BeliefSpec::link_beliefs(
     const std::map<boost::uuids::uuid, std::shared_ptr<Belief>> &beliefs)
     const {
   auto &belief = beliefs.at(boost::lexical_cast<boost::uuids::uuid>(uuid));
@@ -81,7 +81,7 @@ void BeliefSpec::linkBeliefs(
         beliefs.at(boost::lexical_cast<boost::uuids::uuid>(b2));
     std::weak_ptr<contagent::Belief> weak_b2 = actual_b2;
 
-    belief->setRelationship(weak_b2, relationship);
+    belief->set_relationship(weak_b2, relationship);
   }
 }
 } // namespace contagent::json

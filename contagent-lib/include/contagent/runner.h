@@ -42,27 +42,27 @@ public:
   explicit Runner(std::unique_ptr<Configuration> configuration);
 
   /// For every Agent in the Configuration call
-  /// Agent::updateActivationsForAllBeliefs.
+  /// Agent::update_activation_for_all_beliefs.
   /// \author Robert Greener
-  void perceiveBeliefs(uint_fast32_t time);
+  void perceive_beliefs(uint_fast32_t time);
 
-  /// For every Agent in the Configuration call Agent::performAction.
+  /// For every Agent in the Configuration call Agent::perform_action.
   /// \author Robert Greener
-  void performActions(uint_fast32_t time);
+  void perform_actions(uint_fast32_t time);
 
-  /// Tick for a given time, calls ::perceiveBeliefs followed by
-  /// ::performActions.
+  /// Tick for a given time, calls ::perceive_beliefs followed by
+  /// ::perform_actions.
   /// \author Robert Greener
   void tick(uint_fast32_t time);
 
   /// Tick between the start_time (inclusive) and end_time (exclusive), calling
   /// ::tick.
   /// \author Robert Greener
-  void tickBetween(uint_fast32_t start_time, uint_fast32_t end_time);
+  void tick_between(uint_fast32_t start_time, uint_fast32_t end_time);
 
-  /// Tick between the Configuration::getStartTime (inclusive) and
-  /// Configuration::getEndTime (exclusive), serializing the output at the end.
-  /// \author Robert Greener
+  /// Tick between the Configuration::get_start_time (inclusive) and
+  /// Configuration::get_end_time (exclusive), serializing the output at the
+  /// end. \author Robert Greener
   void run();
 
 private:

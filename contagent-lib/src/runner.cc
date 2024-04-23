@@ -34,41 +34,42 @@ namespace contagent {
 Runner::Runner(std::unique_ptr<Configuration> configuration)
     : configuration_(std::move(configuration)) {}
 
-void Runner::perceiveBeliefs(const uint_fast32_t time) {
-  for (auto &a : configuration_->getAgents()) {
-    a->updateActivationsForAllBeliefs(time, configuration_->getBeliefs());
+void Runner::perceive_beliefs(const uint_fast32_t time) {
+  for (auto &a : configuration_->get_agents()) {
+    a->update_activation_for_all_beliefs(time, configuration_->get_beliefs());
   }
 }
 
-void Runner::performActions(const uint_fast32_t time) {
-  for (auto &a : configuration_->getAgents()) {
-    a->performAction(time, configuration_->getBehaviours(),
-                     configuration_->getBeliefs());
+void Runner::perform_actions(const uint_fast32_t time) {
+  for (auto &a : configuration_->get_agents()) {
+    a->perform_action(time, configuration_->get_behaviours(),
+                      configuration_->get_beliefs());
   }
 }
 void Runner::tick(const uint_fast32_t time) {
   LOG(INFO) << "[time=" << time << "] Perceiving beliefs";
-  perceiveBeliefs(time);
+  perceive_beliefs(time);
   LOG(INFO) << "[time=" << time << "] Performing actions";
-  performActions(time);
+  perform_actions(time);
 }
-void Runner::tickBetween(const uint_fast32_t start_time,
-                         const uint_fast32_t end_time) {
+void Runner::tick_between(const uint_fast32_t start_time,
+                          const uint_fast32_t end_time) {
   for (uint_fast32_t i = start_time; i < end_time; ++i) {
     tick(i);
   }
 }
 void Runner::run() {
   LOG(INFO) << "Starting simulation {\"start\":"
-            << configuration_->getStartTime()
-            << ",\"end\":" << configuration_->getEndTime()
-            << ",\"nBeliefs\":" << configuration_->getBeliefs().size()
-            << ",\"nBehaviours\":" << configuration_->getBehaviours().size()
-            << ",\"nAgents\":" << configuration_->getAgents().size() << "}";
-  tickBetween(configuration_->getStartTime(), configuration_->getEndTime());
+            << configuration_->get_start_time()
+            << ",\"end\":" << configuration_->get_end_time()
+            << ",\"nBeliefs\":" << configuration_->get_beliefs().size()
+            << ",\"nBehaviours\":" << configuration_->get_behaviours().size()
+            << ",\"nAgents\":" << configuration_->get_agents().size() << "}";
+  tick_between(configuration_->get_start_time(),
+               configuration_->get_end_time());
   LOG(INFO) << "Simulation complete; serializing output";
 
-  if (configuration_->getFullOutput()) {
+  if (configuration_->get_full_output()) {
     // TODO: serialize full output
   } else {
     // TODO: serialize summary output

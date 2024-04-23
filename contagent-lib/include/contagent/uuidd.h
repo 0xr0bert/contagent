@@ -48,7 +48,7 @@ public:
   /// Get the UUID.
   /// \return The UUID.
   /// \author Robert Greener
-  [[nodiscard]] const boost::uuids::uuid &getUuid() const noexcept;
+  [[nodiscard]] const boost::uuids::uuid &get_uuid() const noexcept;
 
 private:
   /// The UUID

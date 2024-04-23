@@ -60,50 +60,50 @@ public:
 
   explicit Agent(uint_fast32_t n_days);
 
-  [[maybe_unused]] [[nodiscard]] const std::unordered_map<std::shared_ptr<Belief>,
-                                                double_t> &
-  getActivationsForDay(std::size_t day);
+  [[maybe_unused]] [[nodiscard]] const std::unordered_map<
+      std::shared_ptr<Belief>, double_t> &
+  get_activations_for_day(std::size_t day);
 
   [[maybe_unused]] [[nodiscard]] const std::map<std::weak_ptr<Agent>, double_t,
                                                 std::owner_less<>> &
+  get_friends() const;
 
-  getFriends() const;
+  [[nodiscard]] const std::vector<
+      std::unordered_map<std::shared_ptr<Belief>, double_t>> &
+  get_activations() const noexcept;
 
-  [[nodiscard]] const std::vector<std::unordered_map<std::shared_ptr<Belief>, double_t>> &
-  getActivations() const noexcept;
-
-  void setActivations(
+  void set_activations(
       std::vector<std::unordered_map<std::shared_ptr<Belief>, double_t>>
           activations);
-  [[maybe_unused]] void setFriends(
+  [[maybe_unused]] void set_friends(
       std::map<std::weak_ptr<Agent>, double_t, std::owner_less<>> friends);
 
   [[nodiscard]] const std::vector<std::shared_ptr<Behaviour>> &
-  getActions() const;
+  get_actions() const;
   [[maybe_unused]] void
-  setActions(std::vector<std::shared_ptr<Behaviour>> actions);
+  set_actions(std::vector<std::shared_ptr<Behaviour>> actions);
 
   [[maybe_unused]] [[nodiscard]] const std::unordered_map<
       std::shared_ptr<Belief>, double_t> &
-  getDeltas() const;
+  get_deltas() const;
   [[maybe_unused]] void
-  setDeltas(std::unordered_map<std::shared_ptr<Belief>, double_t> deltas);
+  set_deltas(std::unordered_map<std::shared_ptr<Belief>, double_t> deltas);
 
   [[maybe_unused]] [[nodiscard]] const std::unordered_map<
       std::shared_ptr<Belief>,
       std::unordered_map<std::shared_ptr<Behaviour>, double_t>> &
-  getPerformanceRelationships() const;
+  get_performance_relationships() const;
 
-  [[maybe_unused]] void setPerformanceRelationships(
+  [[maybe_unused]] void set_performance_relationships(
       std::unordered_map<
           std::shared_ptr<Belief>,
           std::unordered_map<std::shared_ptr<Behaviour>, double_t>>
           performanceRelationships);
 
   [[nodiscard]] double_t
-  weightedRelationship(uint_fast32_t sim_time,
-                       const std::shared_ptr<Belief> &b1,
-                       const std::shared_ptr<Belief> &b2) const;
+  weighted_relationship(uint_fast32_t sim_time,
+                        const std::shared_ptr<Belief> &b1,
+                        const std::shared_ptr<Belief> &b2) const;
 
   [[nodiscard]] double_t
   contextualize(uint_fast32_t sim_time, const std::shared_ptr<Belief> &b,
@@ -111,32 +111,32 @@ public:
 
   [[nodiscard]] std::unique_ptr<
       std::unordered_map<std::shared_ptr<Behaviour>, double_t>>
-  getActionsOfFriends(uint_fast32_t sim_time) const;
+  get_actions_of_friends(uint_fast32_t sim_time) const;
 
   [[nodiscard]] static double_t
   pressure(const std::shared_ptr<Belief> &b,
            const std::unordered_map<std::shared_ptr<Behaviour>, double_t>
                &actions_of_friends);
 
-  [[nodiscard]] double_t activationChange(
+  [[nodiscard]] double_t activation_change(
       uint_fast32_t sim_time, const std::shared_ptr<Belief> &belief,
       const std::vector<std::shared_ptr<Belief>> &beliefs,
       const std::unordered_map<std::shared_ptr<Behaviour>, double_t>
           &actions_of_friends) const;
 
-  void updateActivation(uint_fast32_t sim_time,
-                        const std::shared_ptr<Belief> &belief,
-                        const std::vector<std::shared_ptr<Belief>> &beliefs,
-                        const std::unordered_map<std::shared_ptr<Behaviour>,
-                                                 double_t> &actions_of_friends);
+  void update_activation(
+      uint_fast32_t sim_time, const std::shared_ptr<Belief> &belief,
+      const std::vector<std::shared_ptr<Belief>> &beliefs,
+      const std::unordered_map<std::shared_ptr<Behaviour>, double_t>
+          &actions_of_friends);
 
-  void updateActivationsForAllBeliefs(
+  void update_activation_for_all_beliefs(
       uint_fast32_t sim_time,
       const std::vector<std::shared_ptr<Belief>> &beliefs);
 
-  void performAction(uint_fast32_t sim_time,
-                     const std::vector<std::shared_ptr<Behaviour>> &behaviours,
-                     const std::vector<std::shared_ptr<Belief>> &beliefs);
+  void perform_action(uint_fast32_t sim_time,
+                      const std::vector<std::shared_ptr<Behaviour>> &behaviours,
+                      const std::vector<std::shared_ptr<Belief>> &beliefs);
 
 private:
   std::vector<std::unordered_map<std::shared_ptr<Belief>, double_t>>

@@ -43,7 +43,7 @@ public:
   /// Get the name of this object.
   /// \return The name.
   /// \author Robert Greener
-  [[nodiscard]] const std::string &getName() const noexcept;
+  [[nodiscard]] const std::string &get_name() const noexcept;
 
 private:
   /// The name of this object

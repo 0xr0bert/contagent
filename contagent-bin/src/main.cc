@@ -98,7 +98,7 @@ load_behaviours(const std::string &file_path) {
     std::vector<std::shared_ptr<Behaviour>> behaviours;
     std::transform(specs.begin(), specs.end(), std::back_inserter(behaviours),
                    [](const contagent::json::BehaviourSpec &spec) {
-                     return spec.toBehaviour();
+                     return spec.to_behaviour();
                    });
 
     return behaviours;
@@ -120,14 +120,14 @@ load_beliefs(const std::string &file_path,
 
     std::transform(specs.begin(), specs.end(), std::back_inserter(beliefs),
                    [behaviour_map](const contagent::json::BeliefSpec &spec) {
-                     return spec.toUnlinkedBelief(behaviour_map);
+                     return spec.to_unlinked_belief(behaviour_map);
                    });
 
     std::map<boost::uuids::uuid, std::shared_ptr<Belief>> belief_map =
         vector_to_uuid_map(beliefs);
 
     for (auto &belief : specs) {
-      belief.linkBeliefs(belief_map);
+      belief.link_beliefs(belief_map);
     }
 
     return beliefs;
@@ -156,15 +156,15 @@ load_agents(const std::string &file_path,
     std::transform(specs.begin(), specs.end(), std::back_inserter(agents),
                    [n_days, behaviour_map,
                     belief_map](const contagent::json::AgentSpec &spec) {
-                     return spec.toUnlinkedAgent(n_days, behaviour_map,
-                                                 belief_map);
+                     return spec.to_unlinked_agent(n_days, behaviour_map,
+                                                   belief_map);
                    });
 
     std::map<boost::uuids::uuid, std::shared_ptr<Agent>> agent_map =
         vector_to_uuid_map(agents);
 
     for (auto &agent : specs) {
-      agent.linkAgents(agent_map);
+      agent.link_agents(agent_map);
     }
 
     return agents;
@@ -181,7 +181,7 @@ vector_to_uuid_map(const std::vector<std::shared_ptr<T>> &vec) {
   std::transform(vec.begin(), vec.end(), std::inserter(m, m.end()),
                  [](const std::shared_ptr<T> &elem) {
                    return std::pair<boost::uuids::uuid, std::shared_ptr<T>>(
-                       elem->getUuid(), elem);
+                       elem->get_uuid(), elem);
                  });
 
   return m;
