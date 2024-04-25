@@ -32,6 +32,7 @@
 #include "agent_spec.h"
 #include "behaviour_spec.h"
 #include "belief_spec.h"
+#include "summary_spec.h"
 #include "zstd.h"
 
 #endif // CONTAGENT_JSON_H

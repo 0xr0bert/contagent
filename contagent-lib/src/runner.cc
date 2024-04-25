@@ -27,6 +27,8 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "contagent/runner.h"
+#include "contagent/json/summary_spec.h"
+#include "contagent/summary.h"
 #include <glog/logging.h>
 #include <iostream>
 
@@ -72,7 +74,14 @@ void Runner::run() {
   if (configuration_->get_full_output()) {
     // TODO: serialize full output
   } else {
-    // TODO: serialize summary output
+    std::vector<contagent::json::SummarySpec> summary_stats(
+        configuration_->get_end_time());
+    for (uint_fast32_t i = configuration_->get_start_time();
+         i < configuration_->get_end_time(); ++i) {
+      auto stats =
+          contagent::summary::calculate_summary_stats(*configuration_, i);
+      summary_stats[i] = json::SummarySpec(*stats);
+    }
   }
 }
 } // namespace contagent

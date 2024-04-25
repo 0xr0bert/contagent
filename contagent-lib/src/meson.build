@@ -10,6 +10,7 @@ lib_sources = files(
     'json/agent_spec.cc',
     'json/behaviour_spec.cc',
     'json/belief_spec.cc',
+    'json/summary_spec.cc',
     'json/zstd_boost.cc',
     'json/zstd.cc'
 )
