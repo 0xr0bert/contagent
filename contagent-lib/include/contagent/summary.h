@@ -25,18 +25,44 @@
 // CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
+#ifndef CONTAGENT_SUMMARY_H
+#define CONTAGENT_SUMMARY_H
 
-#ifndef CONTAGENT_CONTAGENT_H
-#define CONTAGENT_CONTAGENT_H
+#include <memory>
+#include <unordered_map>
 
-#include "agent.h"
 #include "behaviour.h"
 #include "belief.h"
 #include "configuration.h"
-#include "named.h"
-#include "runner.h"
-#include "summary.h"
-#include "uuidd.h"
-#include "json/json.h"
 
-#endif // CONTAGENT_CONTAGENT_H
+namespace contagent::summary {
+[[nodiscard]] std::unordered_map<std::shared_ptr<Belief>, double_t>
+calculate_mean_activation(const Configuration &c, std::size_t time);
+
+[[nodiscard]] std::unordered_map<std::shared_ptr<Belief>, double_t>
+calculate_sd_activation(
+    const Configuration &c, std::size_t time,
+    std::unordered_map<std::shared_ptr<Belief>, double_t> &means);
+
+[[nodiscard]] std::unordered_map<std::shared_ptr<Belief>, double_t>
+calculate_median_activation(const Configuration &c, std::size_t time);
+
+[[nodiscard]] std::unordered_map<std::shared_ptr<Belief>, std::size_t>
+calculate_nonzero_activation(const Configuration &c, std::size_t time);
+
+[[nodiscard]] std::unordered_map<std::shared_ptr<Behaviour>, std::size_t>
+calculate_n_performers(const Configuration &c, std::size_t time);
+
+struct SummaryStats {
+  std::unordered_map<std::shared_ptr<Belief>, double_t> mean_activations;
+  std::unordered_map<std::shared_ptr<Belief>, double_t> sd_activations;
+  std::unordered_map<std::shared_ptr<Belief>, double_t> median_activations;
+  std::unordered_map<std::shared_ptr<Belief>, std::size_t> nonzero_activations;
+  std::unordered_map<std::shared_ptr<Behaviour>, std::size_t> n_performers;
+};
+
+[[nodiscard]] std::unique_ptr<SummaryStats>
+calculate_summary_stats(const Configuration &c, std::size_t time);
+} // namespace contagent::summary
+
+#endif // CONTAGENT_SUMMARY_H

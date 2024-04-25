@@ -5,6 +5,7 @@ lib_sources = files(
     'configuration.cc',
     'named.cc',
     'runner.cc',
+    'summary.cc',
     'uuidd.cc',
     'json/agent_spec.cc',
     'json/behaviour_spec.cc',
