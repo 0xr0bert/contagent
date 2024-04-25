@@ -67,7 +67,8 @@ int main(int argc, char *argv[]) {
 
   auto behaviours = load_behaviours(behaviours_path);
   auto beliefs = load_beliefs(beliefs_path, behaviours);
-  auto agents = load_agents(agents_path, behaviours, beliefs, end_time);
+  std::unique_ptr<std::istream> agents_file = read_zstd(agents_path);
+  auto agents = load_agents(*agents_file, behaviours, beliefs, end_time);
   auto config = make_configuration(start_time, end_time, behaviours, beliefs,
                                    agents, full_output);
   Runner runner(std::move(config));
@@ -136,13 +137,12 @@ load_beliefs(const std::string &file_path,
   }
 }
 std::vector<std::shared_ptr<Agent>>
-load_agents(const std::string &file_path,
+load_agents(std::istream &is,
             const std::vector<std::shared_ptr<Behaviour>> &behaviours,
             const std::vector<std::shared_ptr<Belief>> &beliefs,
             const uint_fast32_t n_days) {
-  std::ifstream file(file_path);
   try {
-    nlohmann::json data = nlohmann::json::parse(file);
+    nlohmann::json data = nlohmann::json::parse(is);
     auto specs = data.template get<std::vector<contagent::json::AgentSpec>>();
 
     std::map<boost::uuids::uuid, std::shared_ptr<Behaviour>> behaviour_map =

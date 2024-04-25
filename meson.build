@@ -4,13 +4,17 @@ project('contagent', 'cpp',
 
 subdir('contagent-lib')
 
-boost_dep = dependency('boost')
+boost_dep = dependency(
+        'boost',
+        modules : ['iostreams']
+)
+zstd_dep = dependency('libzstd')
 glog_dep = dependency('libglog')
 contagent_lib = shared_library(
         'contagent',
         lib_sources,
         include_directories : incdir,
-        dependencies : [boost_dep, glog_dep]
+        dependencies : [boost_dep, glog_dep,zstd_dep]
 )
 
 clipp_dir = include_directories('libs/clipp/include')

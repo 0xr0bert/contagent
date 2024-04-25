@@ -26,12 +26,14 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef CONTAGENT_JSON_H
-#define CONTAGENT_JSON_H
+#include "contagent/json/zstd.h"
 
-#include "agent_spec.h"
-#include "behaviour_spec.h"
-#include "belief_spec.h"
-#include "zstd.h"
+std::unique_ptr<std::istream> read_zstd(const std::string &filepath) {
+  std::ifstream compressed(filepath, std::ios_base::in | std::ios_base::binary);
 
-#endif // CONTAGENT_JSON_H
+  boost::iostreams::filtering_istreambuf in;
+  in.push(boost::iostreams::zstd_decompressor());
+  in.push(compressed);
+
+  return std::make_unique<std::istream>(&in);
+}

@@ -8,5 +8,7 @@ lib_sources = files(
     'uuidd.cc',
     'json/agent_spec.cc',
     'json/behaviour_spec.cc',
-    'json/belief_spec.cc'
+    'json/belief_spec.cc',
+    'json/zstd_boost.cc',
+    'json/zstd.cc'
 )

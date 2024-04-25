@@ -25,13 +25,16 @@
 // CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
+#ifndef CONTAGENT_JSON_ZSTD_H
+#define CONTAGENT_JSON_ZSTD_H
 
-#ifndef CONTAGENT_JSON_H
-#define CONTAGENT_JSON_H
+#include <boost/iostreams/filter/zstd.hpp>
+#include <boost/iostreams/filtering_streambuf.hpp>
+#include <fstream>
+#include <iostream>
+#include <memory>
+#include <string>
 
-#include "agent_spec.h"
-#include "behaviour_spec.h"
-#include "belief_spec.h"
-#include "zstd.h"
+std::unique_ptr<std::istream> read_zstd(const std::string &filepath);
 
-#endif // CONTAGENT_JSON_H
+#endif // CONTAGENT_JSON_ZSTD_H
