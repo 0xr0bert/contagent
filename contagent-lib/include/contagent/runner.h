@@ -67,6 +67,8 @@ public:
 
   void serialize_and_output_summary();
 
+  void Runner::serialize_and_output_full();
+
 private:
   /// The Configuration of the simulation run.
   std::unique_ptr<Configuration> configuration_;

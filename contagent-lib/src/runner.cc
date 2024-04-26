@@ -27,6 +27,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "contagent/runner.h"
+#include "contagent/json/agent_spec.h"
 #include "contagent/json/summary_spec.h"
 #include "contagent/summary.h"
 #include <glog/logging.h>
@@ -72,10 +73,11 @@ void Runner::run() {
   LOG(INFO) << "Simulation complete; serializing output";
 
   if (configuration_->get_full_output()) {
-    // TODO: serialize full output
+    serialize_and_output_full();
   } else {
     serialize_and_output_summary();
   }
+  LOG(INFO) << "Output successfully serialized";
 }
 
 void Runner::serialize_and_output_summary() {
@@ -90,5 +92,18 @@ void Runner::serialize_and_output_summary() {
 
   nlohmann::json stats = summary_stats;
   *configuration_->get_output_stream() << stats;
+}
+
+void Runner::serialize_and_output_full() {
+  std::vector<contagent::json::AgentSpec> agent_specs(
+      configuration_->get_end_time());
+
+  for (uint_fast32_t i = configuration_->get_start_time();
+       i < configuration_->get_end_time(); ++i) {
+    agent_specs[i] = json::AgentSpec(*configuration_->get_agents()[i]);
+  }
+
+  nlohmann::json j = agent_specs;
+  *configuration_->get_output_stream() << j;
 }
 } // namespace contagent
