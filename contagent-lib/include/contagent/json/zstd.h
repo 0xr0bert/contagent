@@ -35,6 +35,14 @@
 #include <memory>
 #include <string>
 
+namespace contagent::json {
 std::unique_ptr<std::istream> read_zstd(const std::string &filepath);
+std::unique_ptr<std::ostream> write_zstd(const std::string &filepath,
+                                         const uint_fast8_t compression_level);
 
+static inline std::unique_ptr<std::ostream>
+write_zstd(const std::string &filepath) {
+  return write_zstd(filepath, boost::iostreams::zstd::default_compression);
+}
+} // namespace contagent::json
 #endif // CONTAGENT_JSON_ZSTD_H

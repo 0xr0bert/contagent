@@ -67,10 +67,12 @@ int main(int argc, char *argv[]) {
 
   auto behaviours = load_behaviours(behaviours_path);
   auto beliefs = load_beliefs(beliefs_path, behaviours);
-  std::unique_ptr<std::istream> agents_file = read_zstd(agents_path);
+  std::unique_ptr<std::istream> agents_file =
+      contagent::json::read_zstd(agents_path);
   auto agents = load_agents(*agents_file, behaviours, beliefs, end_time);
+  auto output = contagent::json::write_zstd(output_path);
   auto config = make_configuration(start_time, end_time, behaviours, beliefs,
-                                   agents, full_output);
+                                   agents, full_output, std::move(output));
   Runner runner(std::move(config));
   runner.run();
 }
@@ -80,12 +82,11 @@ make_configuration(const uint_fast32_t start_time, const uint_fast32_t end_time,
                    const std::vector<std::shared_ptr<Behaviour>> &behaviours,
                    const std::vector<std::shared_ptr<Belief>> &beliefs,
                    const std::vector<std::shared_ptr<Agent>> &agents,
-                   const bool full_output) {
-  std::unique_ptr<std::ostream> ostream =
-      std::make_unique<std::ostream>(std::cout.rdbuf());
-  std::unique_ptr<Configuration> config = std::make_unique<Configuration>(
-      behaviours, beliefs, agents, start_time, end_time, std::move(ostream),
-      full_output);
+                   const bool full_output,
+                   std::unique_ptr<std::ostream> output) {
+  std::unique_ptr<Configuration> config =
+      std::make_unique<Configuration>(behaviours, beliefs, agents, start_time,
+                                      end_time, std::move(output), full_output);
   return config;
 }
 std::vector<std::shared_ptr<Behaviour>>

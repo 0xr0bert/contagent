@@ -28,6 +28,7 @@
 
 #include "contagent/json/zstd.h"
 
+namespace contagent::json {
 std::unique_ptr<std::istream> read_zstd(const std::string &filepath) {
   std::ifstream compressed(filepath, std::ios_base::in | std::ios_base::binary);
 
@@ -37,3 +38,16 @@ std::unique_ptr<std::istream> read_zstd(const std::string &filepath) {
 
   return std::make_unique<std::istream>(&in);
 }
+
+std::unique_ptr<std::ostream> write_zstd(const std::string &filepath,
+                                         const uint_fast8_t compression_level) {
+  std::ofstream compressed(filepath,
+                           std::ios_base::out | std::ios_base::binary);
+  boost::iostreams::filtering_ostreambuf out;
+  boost::iostreams::zstd_params params(compression_level);
+  out.push(boost::iostreams::zstd_compressor(params));
+  out.push(compressed);
+
+  return std::make_unique<std::ostream>(&out);
+}
+} // namespace contagent::json

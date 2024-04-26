@@ -74,14 +74,21 @@ void Runner::run() {
   if (configuration_->get_full_output()) {
     // TODO: serialize full output
   } else {
-    std::vector<contagent::json::SummarySpec> summary_stats(
-        configuration_->get_end_time());
-    for (uint_fast32_t i = configuration_->get_start_time();
-         i < configuration_->get_end_time(); ++i) {
-      auto stats =
-          contagent::summary::calculate_summary_stats(*configuration_, i);
-      summary_stats[i] = json::SummarySpec(*stats);
-    }
+    serialize_and_output_summary();
   }
+}
+
+void Runner::serialize_and_output_summary() {
+  std::vector<contagent::json::SummarySpec> summary_stats(
+      configuration_->get_end_time());
+  for (uint_fast32_t i = configuration_->get_start_time();
+       i < configuration_->get_end_time(); ++i) {
+    auto stats =
+        contagent::summary::calculate_summary_stats(*configuration_, i);
+    summary_stats[i] = json::SummarySpec(*stats);
+  }
+
+  nlohmann::json stats = summary_stats;
+  *configuration_->get_output_stream() << stats;
 }
 } // namespace contagent

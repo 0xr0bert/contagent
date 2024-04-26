@@ -41,7 +41,8 @@ make_configuration(const uint_fast32_t start_time, const uint_fast32_t end_time,
                    const std::vector<std::shared_ptr<Behaviour>> &behaviours,
                    const std::vector<std::shared_ptr<Belief>> &beliefs,
                    const std::vector<std::shared_ptr<Agent>> &agents,
-                   const bool full_output);
+                   const bool full_output,
+                   std::unique_ptr<std::ostream> output);
 
 std::vector<std::shared_ptr<Behaviour>>
 load_behaviours(const std::string &file_path);

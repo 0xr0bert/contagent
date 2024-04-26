@@ -65,6 +65,8 @@ public:
   /// end. \author Robert Greener
   void run();
 
+  void serialize_and_output_summary();
+
 private:
   /// The Configuration of the simulation run.
   std::unique_ptr<Configuration> configuration_;
