@@ -30,6 +30,7 @@
 #define CONTAGENT_UUIDD_H
 
 #include <boost/uuid/uuid.hpp>
+#include <memory>
 
 namespace contagent {
 /// Something with a UUID.
@@ -55,6 +56,9 @@ private:
   /// \author Robert Greener
   const boost::uuids::uuid uuid_;
 };
+
+template <class U>
+concept CheckUUIDd = std::is_base_of<contagent::UUIDd, U>::value;
 } // namespace contagent
 
 #endif // CONTAGENT_UUIDD_H

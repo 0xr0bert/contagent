@@ -30,20 +30,12 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
-#ifndef CONTAGENT_SUMMARY_SPEC_FILL_MAP
-#define CONTAGENT_SUMMARY_SPEC_FILL_MAP(name)                                  \
-  for (const auto &[b, v] : stats.name) {                                      \
-    std::string u = boost::lexical_cast<std::string>(b->get_uuid());           \
-    name[u] = v;                                                               \
-  }
-#endif
-
 namespace contagent::json {
 SummarySpec::SummarySpec(const contagent::summary::SummaryStats &stats) {
-  CONTAGENT_SUMMARY_SPEC_FILL_MAP(mean_activations)
-  CONTAGENT_SUMMARY_SPEC_FILL_MAP(sd_activations)
-  CONTAGENT_SUMMARY_SPEC_FILL_MAP(median_activations)
-  CONTAGENT_SUMMARY_SPEC_FILL_MAP(nonzero_activations)
-  CONTAGENT_SUMMARY_SPEC_FILL_MAP(n_performers)
+  fill_map(mean_activations, stats.mean_activations);
+  fill_map(sd_activations, stats.sd_activations);
+  fill_map(median_activations, stats.median_activations);
+  fill_map(nonzero_activations, stats.nonzero_activations);
+  fill_map(n_performers, stats.n_performers);
 }
 } // namespace contagent::json

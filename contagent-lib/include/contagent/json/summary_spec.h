@@ -31,7 +31,9 @@
 
 #include "contagent/summary.h"
 
+#include <boost/lexical_cast.hpp>
 #include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_io.hpp>
 #include <nlohmann/json.hpp>
 #include <string>
 
@@ -46,6 +48,17 @@ public:
   std::map<std::string, double_t> median_activations;
   std::map<std::string, std::size_t> nonzero_activations;
   std::map<std::string, std::size_t> n_performers;
+
+private:
+  template <class U, typename V>
+    requires CheckUUIDd<U>
+  static inline void
+  fill_map(std::map<std::string, V> &out,
+           const std::unordered_map<std::shared_ptr<U>, V> &in) {
+    for (const auto &[k, v] : in) {
+      out[boost::lexical_cast<std::string>(k->get_uuid())] = v;
+    }
+  }
 };
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SummarySpec, mean_activations,
