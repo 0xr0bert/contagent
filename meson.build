@@ -10,14 +10,7 @@ boost_dep = dependency(
 )
 zstd_dep = dependency('libzstd')
 glog_dep = dependency('libglog')
-contagent_lib_so = shared_library(
-        'contagent',
-        lib_sources,
-        include_directories : incdir,
-        dependencies : [boost_dep, glog_dep, zstd_dep]
-)
-
-contagent_lib_a = static_library(
+contagent_lib =library(
         'contagent',
         lib_sources,
         include_directories : incdir,
@@ -32,7 +25,7 @@ contagent_bin = executable(
         bin_sources,
         install : true,
         include_directories : [incdir, clipp_dir],
-        link_with : contagent_lib_a,
+        link_with : contagent_lib,
         dependencies : glog_dep
 )
 
