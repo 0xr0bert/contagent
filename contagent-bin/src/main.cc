@@ -67,10 +67,9 @@ int main(int argc, char *argv[]) {
 
   auto behaviours = load_behaviours(behaviours_path);
   auto beliefs = load_beliefs(beliefs_path, behaviours);
-  std::unique_ptr<std::istream> agents_file =
-      contagent::json::read_zstd(agents_path);
+  auto agents_file = contagent::json::create_zstd_istream(agents_path);
   auto agents = load_agents(*agents_file, behaviours, beliefs, end_time);
-  auto output = contagent::json::write_zstd(output_path);
+  auto output = contagent::json::create_zstd_ostream(output_path);
   auto config = make_configuration(start_time, end_time, behaviours, beliefs,
                                    agents, full_output, std::move(output));
   Runner runner(std::move(config));

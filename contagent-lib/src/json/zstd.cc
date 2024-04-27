@@ -28,26 +28,24 @@
 
 #include "contagent/json/zstd.h"
 
+#include <boost/iostreams/device/file.hpp>
+#include <boost/iostreams/filter/zstd.hpp>
+#include <boost/iostreams/filtering_stream.hpp>
+
 namespace contagent::json {
-std::unique_ptr<std::istream> read_zstd(const std::string &filepath) {
-  std::ifstream compressed(filepath, std::ios_base::in | std::ios_base::binary);
-
-  boost::iostreams::filtering_istreambuf in;
-  in.push(boost::iostreams::zstd_decompressor());
-  in.push(compressed);
-
-  return std::make_unique<std::istream>(&in);
+std::unique_ptr<std::istream> create_zstd_istream(const std::string &filepath) {
+  auto istream = std::make_unique<boost::iostreams::filtering_istream>();
+  istream->push(boost::iostreams::zstd_decompressor());
+  istream->push(boost::iostreams::file_source(filepath));
+  return istream;
 }
 
-std::unique_ptr<std::ostream> write_zstd(const std::string &filepath,
-                                         const uint_fast8_t compression_level) {
-  std::ofstream compressed(filepath,
-                           std::ios_base::out | std::ios_base::binary);
-  boost::iostreams::filtering_ostreambuf out;
-  boost::iostreams::zstd_params params(compression_level);
-  out.push(boost::iostreams::zstd_compressor(params));
-  out.push(compressed);
-
-  return std::make_unique<std::ostream>(&out);
+std::unique_ptr<std::ostream>
+create_zstd_ostream(const std::string &filepath,
+                    const uint32_t compression_level) {
+  auto ostream = std::make_unique<boost::iostreams::filtering_ostream>();
+  ostream->push(boost::iostreams::zstd_compressor(compression_level));
+  ostream->push(boost::iostreams::file_sink(filepath));
+  return ostream;
 }
 } // namespace contagent::json

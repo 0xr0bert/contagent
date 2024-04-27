@@ -88,7 +88,7 @@ calculate_median_activation(const Configuration &c, std::size_t time) {
     std::sort(v.begin(), v.end());
   }
 
-  std::size_t ix = c.get_agents().size();
+  std::size_t ix = c.get_agents().size() / 2 - 1;
   bool is_even = c.get_agents().size() % 2 == 0;
 
   std::unordered_map<std::shared_ptr<Belief>, double_t> m;

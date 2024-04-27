@@ -188,7 +188,7 @@ void Agent::update_activation(
     activations_.resize(sim_time + 1);
   }
 
-  activations_.at(sim_time).at(belief) = new_activation;
+  activations_.at(sim_time)[belief] = new_activation;
 }
 void Agent::update_activation_for_all_beliefs(
     const uint_fast32_t sim_time,
@@ -238,7 +238,7 @@ void Agent::perform_action(
   const auto &last_elem = unnormalized_probabilities.back();
 
   if (last_elem.second < 0.0) {
-    actions_.at(sim_time) = last_elem.first;
+    actions_.insert(actions_.begin() + sim_time, last_elem.first);
   } else {
     std::vector<std::pair<std::shared_ptr<Behaviour>, double_t>>
         filtered_probabilities;
@@ -247,7 +247,8 @@ void Agent::perform_action(
                  std::back_inserter(filtered_probabilities),
                  [](const auto &pair) { return pair.second >= 0.0; });
     if (filtered_probabilities.size() == 1) {
-      actions_.at(sim_time) = filtered_probabilities[0].first;
+      actions_.insert(actions_.begin() + sim_time,
+                      filtered_probabilities[0].first);
     } else {
       double_t normalizing_factor = 0.0;
 
@@ -278,7 +279,7 @@ void Agent::perform_action(
         }
       }
 
-      actions_.at(sim_time) = chosenBehaviour;
+      actions_.insert(actions_.begin() + sim_time, chosenBehaviour);
     }
   }
 }

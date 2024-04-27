@@ -30,6 +30,7 @@
 #define CONTAGENT_CONFIGURATION_H
 
 #include "agent.h"
+#include "json/zstd.h"
 #include "behaviour.h"
 #include "belief.h"
 #include <memory>

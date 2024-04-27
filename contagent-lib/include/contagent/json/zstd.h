@@ -28,21 +28,25 @@
 #ifndef CONTAGENT_JSON_ZSTD_H
 #define CONTAGENT_JSON_ZSTD_H
 
-#include <boost/iostreams/filter/zstd.hpp>
-#include <boost/iostreams/filtering_streambuf.hpp>
 #include <fstream>
 #include <iostream>
 #include <memory>
 #include <string>
 
-namespace contagent::json {
-std::unique_ptr<std::istream> read_zstd(const std::string &filepath);
-std::unique_ptr<std::ostream> write_zstd(const std::string &filepath,
-                                         const uint_fast8_t compression_level);
+#include <boost/iostreams/filter/zstd.hpp>
 
-static inline std::unique_ptr<std::ostream>
-write_zstd(const std::string &filepath) {
-  return write_zstd(filepath, boost::iostreams::zstd::default_compression);
+namespace contagent::json {
+
+std::unique_ptr<std::istream> create_zstd_istream(const std::string &filepath);
+
+std::unique_ptr<std::ostream>
+create_zstd_ostream(const std::string &filepath,
+                    const uint32_t compression_level);
+
+inline std::unique_ptr<std::ostream>
+create_zstd_ostream(const std::string &filepath) {
+  return create_zstd_ostream(filepath,
+                             boost::iostreams::zstd::default_compression);
 }
 } // namespace contagent::json
 #endif // CONTAGENT_JSON_ZSTD_H
