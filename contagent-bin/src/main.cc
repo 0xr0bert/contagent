@@ -44,6 +44,7 @@ int main(int argc, char *argv[]) {
   std::string behaviours_path;
   std::string output_path;
   bool full_output = false;
+  uint_fast8_t compression_level = 3;
 
   auto cli =
       (value("start-time", start_time).doc("The start time of the simulation"),
@@ -54,7 +55,10 @@ int main(int argc, char *argv[]) {
        value("output", output_path).doc("The output.json.zst path"),
        option("-f", "--full-output")
            .set(full_output)
-           .doc("Whether to fully serialize the agents as the output"));
+           .doc("Whether to fully serialize the agents as the output"),
+       option("-Z").doc("zstd output compression level [default=3] between 1 "
+                        "and 22 (20-22 have high mem usage).") &
+           value("level", compression_level));
 
   if (!parse(argc, argv, cli)) {
     std::cout << make_man_page(cli, "contagentsim");
@@ -69,7 +73,7 @@ int main(int argc, char *argv[]) {
   auto beliefs = load_beliefs(beliefs_path, behaviours);
   auto agents_file = contagent::json::create_zstd_istream(agents_path);
   auto agents = load_agents(*agents_file, behaviours, beliefs, end_time);
-  auto output = contagent::json::create_zstd_ostream(output_path);
+  auto output = contagent::json::create_zstd_ostream(output_path, compression_level);
   auto config = make_configuration(start_time, end_time, behaviours, beliefs,
                                    agents, full_output, std::move(output));
   Runner runner(std::move(config));
