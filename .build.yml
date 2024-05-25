@@ -1,6 +1,7 @@
 image: alpine/latest
 packages:
   - cmake
+  - ninja
   - glog-dev
   - nlohmann-json
   - boost-dev
