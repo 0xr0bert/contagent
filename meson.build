@@ -8,13 +8,14 @@ boost_dep = dependency(
         'boost',
         modules : ['iostreams']
 )
+nlohmann_json_dep = dependency('nlohmann_json')
 zstd_dep = dependency('libzstd')
 glog_dep = dependency('libglog')
 contagent_lib =library(
         'contagent',
         lib_sources,
         include_directories : incdir,
-        dependencies : [boost_dep, glog_dep, zstd_dep]
+        dependencies : [boost_dep, glog_dep, zstd_dep, nlohmann_json_dep]
 )
 
 clipp_dir = include_directories('libs/clipp/include')
