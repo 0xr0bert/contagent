@@ -4,7 +4,7 @@ packages:
   - glog-dev
   - nlohmann-json
   - boost-dev
-  - clang18
+  - clang17
   - zstd
 sources:
   - https://git.sr.ht/~ragreener1/contagent
