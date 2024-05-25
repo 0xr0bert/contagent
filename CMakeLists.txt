@@ -1,10 +1,10 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.27)
 project(contagent)
 set(CMAKE_CXX_STANDARD 20)
 
 # Dependencies
 
-find_package(Boost 1.83 REQUIRED COMPONENTS iostreams)
+find_package(Boost 1.82 REQUIRED COMPONENTS iostreams)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(ZSTD REQUIRED IMPORTED_TARGET libzstd)
 pkg_check_modules(GLOG REQUIRED IMPORTED_TARGET libglog)
