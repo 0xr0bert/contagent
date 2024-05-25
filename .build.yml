@@ -1,10 +1,10 @@
 image: alpine/latest
 packages:
-  - meson
+  - cmake
   - glog-dev
   - nlohmann-json
   - boost-dev
-  - clang17
+  - clang18
   - zstd
 sources:
   - https://git.sr.ht/~ragreener1/contagent
@@ -15,7 +15,7 @@ triggers:
 tasks:
   - setup: |
       cd contagent
-      CC=clang CXX=clang++ meson setup builddir
+      CC=clang CXX=clang++ cmake -S . -B builddir -G Ninja
   - compile: |
       cd contagent
       ninja -C builddir
