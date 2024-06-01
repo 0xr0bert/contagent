@@ -22,7 +22,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        DEBIAN_FRONTEND=noninteractive sudo apt-get -y install libboost-all-dev libgoogle-glog-dev nlohmann-json3-dev ninja-build clang
+        DEBIAN_FRONTEND=noninteractive sudo apt-get -y install libboost-all-dev libgoogle-glog-dev nlohmann-json3-dev ninja-build clang libzstd-dev
 
     - name: Configure CMake
       run: CC=clang CXX=clang++ cmake -S . -B builddir -G Ninja -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
