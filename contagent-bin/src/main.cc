@@ -36,6 +36,7 @@
 using namespace clipp;
 
 int main(int argc, char *argv[]) {
+  FLAGS_alsologtostderr = 1;
   google::InitGoogleLogging(argv[0]);
   uint_fast32_t start_time;
   uint_fast32_t end_time;
@@ -69,8 +70,11 @@ int main(int argc, char *argv[]) {
     throw std::invalid_argument("End time must be after start time");
   }
 
+  LOG(INFO) << "Loading behaviours";
   auto behaviours = load_behaviours(behaviours_path);
+  LOG(INFO) << "Loading beliefs";
   auto beliefs = load_beliefs(beliefs_path, behaviours);
+  LOG(INFO) << "Loading agents";
   auto agents_file = contagent::json::create_zstd_istream(agents_path);
   auto agents = load_agents(*agents_file, behaviours, beliefs, end_time);
   auto output = contagent::json::create_zstd_ostream(output_path, compression_level);
@@ -146,6 +150,7 @@ load_agents(std::istream &is,
             const std::vector<std::shared_ptr<Belief>> &beliefs,
             const uint_fast32_t n_days) {
   try {
+    LOG(INFO) << "Parsing agents JSON";
     nlohmann::json data = nlohmann::json::parse(is);
     auto specs = data.template get<std::vector<contagent::json::AgentSpec>>();
 
@@ -157,6 +162,7 @@ load_agents(std::istream &is,
 
     std::vector<std::shared_ptr<Agent>> agents;
 
+    LOG(INFO) << "Transforming agents JSON to unlinked agents";
     std::transform(specs.begin(), specs.end(), std::back_inserter(agents),
                    [n_days, behaviour_map,
                     belief_map](const contagent::json::AgentSpec &spec) {
@@ -167,6 +173,7 @@ load_agents(std::istream &is,
     std::map<boost::uuids::uuid, std::shared_ptr<Agent>> agent_map =
         vector_to_uuid_map(agents);
 
+    LOG(INFO) << "Link agents";
     for (auto &agent : specs) {
       agent.link_agents(agent_map);
     }

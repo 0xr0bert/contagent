@@ -68,6 +68,7 @@ void Runner::run() {
             << ",\"nBeliefs\":" << configuration_->get_beliefs().size()
             << ",\"nBehaviours\":" << configuration_->get_behaviours().size()
             << ",\"nAgents\":" << configuration_->get_agents().size() << "}";
+  perform_actions(configuration_->get_start_time() - 1);
   tick_between(configuration_->get_start_time(),
                configuration_->get_end_time());
   LOG(INFO) << "Simulation complete; serializing output";
