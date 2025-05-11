@@ -6,13 +6,15 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Dependencies
 
-find_package(Boost 1.82 REQUIRED COMPONENTS iostreams)
+find_package(Boost 1.82 REQUIRED CONFIG COMPONENTS iostreams)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(ZSTD REQUIRED IMPORTED_TARGET libzstd)
 pkg_check_modules(GLOG REQUIRED IMPORTED_TARGET libglog)
 pkg_check_modules(NLOHMANN_JSON REQUIRED IMPORTED_TARGET nlohmann_json)
 
 # Contagent
+
+add_definitions(-DGLOG_USE_GLOG_EXPORT)
 
 add_library(contagent SHARED)
 target_sources(contagent
