@@ -64,7 +64,7 @@ public:
 
   /// Set all the relationships, overriding the existing ones. This is the value
   /// that describes how adopting the other belief is affected by holding this
-  /// belief. 1 is no effect. < 1 is a negative influence. > 1 is a positive
+  /// belief. 0 is no effect. < 0 is a negative influence. > 0 is a positive
   /// influence.
   /// \brief Set all the relationships.
   /// \param relationships The new relationships.
@@ -75,7 +75,7 @@ public:
 
   /// Get all the relationships. This is the value
   /// that describes how adopting the other belief is affected by holding this
-  /// belief. 1 is no effect. < 1 is a negative influence. > 1 is a positive
+  /// belief. 0 is no effect. < 0 is a negative influence. > 0 is a positive
   /// influence.
   /// \brief Get all the relationships.
   /// \return The relationships.
