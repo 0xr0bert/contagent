@@ -7,8 +7,13 @@ tasks:
   - build: |
       cd contagent
       ./gradlew build
+  - artifacts: |
+      cd contagent
+      mkdir artifacts
+      cp contagent-lib/build/libs/contagent-lib-*.jar artifacts/
+      cp contagent-app/build/libs/contagent-app-*.jar artifacts/
+      cp contagent-app/build/distributions/contagent-app-*.tar artifacts/
+      cp contagent-app/build/distributions/contagent-app-*.zip artifacts/
+      tar -c -J -C artifacts -f contagent.tar.xz .
 artifacts:
-  - contagent-lib/build/libs/contagent-lib-*.jar
-  - contagent-app/build/libs/contagent-app-*.jar
-  - contagent-app/build/distributions/contagent-app-*.zip
-  - contagent-app/build/distributions/contagent-app-*.tar
+  - contagent/contagent.tar.xz
