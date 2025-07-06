@@ -92,7 +92,7 @@ class Agent(
 
         val newActivation = max(-1.0, min(1.0, delta * activation + activationChangeV))
 
-        if (this.activations.size < simTime + 1) {
+        if (this.activations.size <= simTime) {
             this.activations.add(simTime, HashMap())
         }
         this.activations[simTime][belief] = newActivation

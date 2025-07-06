@@ -24,11 +24,11 @@ import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
     val logger = KotlinLogging.logger("Contagent")
-    if (args.size < 6 || args.size > 7) {
+    if (args.size < 6 || args.size > 8) {
         logger.error { "Incorrect number of args. Correct usage is:\n"+
-            "./contagent <start-time> <end-time> <agents> <beliefs> <behaviours> <output> <full-output>\n" +
+            "./contagent <start-time> <end-time> <agents> <beliefs> <behaviours> <output> <full-output> <seed>\n" +
             "for example\n" +
-            "./contagent 1 1000 agents.json.zst beliefs.json behaviours.json output.json.zst false"
+            "./contagent 1 1000 agents.json.zst beliefs.json behaviours.json output.json.zst false 123"
         }
         exitProcess(1)
     }
@@ -47,9 +47,14 @@ fun main(args: Array<String>) {
     logger.info { "Loading agents" }
     val agents = loadAgents(args[2], behaviours, beliefs, logger)
     val output = FileOutputStream(args[5])
+    val seed = if (args.size >= 8) {
+        args[7].toLong()
+    } else {
+        System.currentTimeMillis()
+    }
 
-    val fullOutput = args.size == 7 && args[6] == "true"
-    val configuration = Configuration(behaviours, beliefs, agents, startTime, endTime, output, fullOutput, Random(System.currentTimeMillis()), logger)
+    val fullOutput = args.size >= 7 && args[6] == "true"
+    val configuration = Configuration(behaviours, beliefs, agents, startTime, endTime, output, fullOutput, Random(seed), logger)
     val runner = Runner(configuration)
     runner.run()
 }
