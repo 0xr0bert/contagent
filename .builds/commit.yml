@@ -1,6 +1,9 @@
 image: archlinux
 packages:
   - jdk21-openjdk
+  - hut
+  - xz
+  - zip
 sources:
   - https://git.sr.ht/~ragreener1/contagent
 tasks:
@@ -15,5 +18,22 @@ tasks:
       cp contagent-app/build/distributions/contagent-app-*.tar artifacts/
       cp contagent-app/build/distributions/contagent-app-*.zip artifacts/
       tar -c -J -C artifacts -f contagent.tar.xz .
+  - build-and-publish-if-release: |
+      cd contagent
+      tag=$(git describe --exact-match 2>/dev/null || true)
+      if [ -z "$tag" ]; then
+        echo "Current commit is not a tag; not packaging anything"
+      else
+        version=$(echo "$tag" | tr -d 'v')
+        ./gradlew build -Pversion=$version
+        tar -rvf contagent-app/build/distributions/contagent-app-$version.tar LICENSE README.md
+        xz -z contagent-app/build/distributions/contagent-app-$version.tar
+        zip -g contagent-app/build/distributions/contagent-app-$version.zip LICENSE README.md
+        hut git artifact upload contagent-app/build/distributions/contagent-app-$version.tar.xz --rev "$tag" -r ~ragreener1/contagent
+        hut git artifact upload contagent-app/build/distributions/contagent-app-$version.zip --rev "$tag" -r ~ragreener1/contagent
+        hut git artifact upload contagent-app/build/libs/contagent-app-$version.jar
+        hut git artifact upload contagent-lib/build/libs/contagent-lib-$version.jar
+      fi
+oauth: git.sr.ht/OBJECTS:RW git.sr.ht/PROFILE:R git.sr.ht/REPOSITORIES:R
 artifacts:
   - contagent/contagent.tar.xz
