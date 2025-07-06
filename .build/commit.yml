@@ -2,7 +2,7 @@ image: archlinux
 packages:
   - jdk21-openjdk
 sources:
-  https://git.sr.ht/~ragreener1/contagent
+  - https://git.sr.ht/~ragreener1/contagent
 tasks:
   - build: |
       cd contagent
