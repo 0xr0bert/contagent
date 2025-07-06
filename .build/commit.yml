@@ -1,0 +1,14 @@
+image: archlinux
+packages:
+  - jdk21-openjdk
+sources:
+  https://git.sr.ht/~ragreener1/contagent
+tasks:
+  - build: |
+      cd contagent
+      ./gradlew build
+artifacts:
+  - contagent-lib/build/libs/contagent-lib-*.jar
+  - contagent-app/build/libs/contagent-app-*.jar
+  - contagent-app/build/distributions/contagent-app-*.zip
+  - contagent-app/build/distributions/contagent-app-*.tar
