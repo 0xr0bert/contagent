@@ -129,7 +129,10 @@ Agent::get_actions_of_friends(uint_fast32_t sim_time) const {
   for (auto const &[weak_friend, w] : friends_) {
     if (auto shared_friend = weak_friend.lock()) {
       auto &action = shared_friend->get_actions().at(sim_time);
-      map->insert(std::pair<std::shared_ptr<Behaviour>, double_t>(action, w));
+      if (!map->contains(action)) {
+        map->insert(std::pair<std::shared_ptr<Behaviour>, double_t>(action, 0.0));
+      }
+      map->insert(std::pair<std::shared_ptr<Behaviour>, double_t>(action, map->at(action) * w));
     }
   }
 
