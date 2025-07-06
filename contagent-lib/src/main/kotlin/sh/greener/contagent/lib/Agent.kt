@@ -38,7 +38,7 @@ class Agent(
     }
 
     private fun contextualize(simTime: Int, b: Belief, beliefs: Collection<Belief>): Double {
-        val size = beliefs.size;
+        val size = beliefs.size
         if (size == 0) {
             return 0.0
         } else {
@@ -99,7 +99,7 @@ class Agent(
     }
 
     fun updateActivationsForAllBeliefs(simTime: Int, beliefs: Collection<Belief>) {
-        val actionsOfFriends = getActionsOfFriends(simTime)
+        val actionsOfFriends = getActionsOfFriends(simTime - 1)
         beliefs
             .forEach { updateActivation(simTime, it, beliefs, actionsOfFriends) }
     }
