@@ -113,10 +113,10 @@ public:
       std::unordered_map<std::shared_ptr<Behaviour>, double_t>>
   get_actions_of_friends(uint_fast32_t sim_time) const;
 
-  [[nodiscard]] static double_t
+  [[nodiscard]] double_t
   pressure(const std::shared_ptr<Belief> &b,
            const std::unordered_map<std::shared_ptr<Behaviour>, double_t>
-               &actions_of_friends);
+               &actions_of_friends) const;
 
   [[nodiscard]] double_t activation_change(
       uint_fast32_t sim_time, const std::shared_ptr<Belief> &belief,

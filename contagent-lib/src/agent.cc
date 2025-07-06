@@ -132,7 +132,7 @@ Agent::get_actions_of_friends(uint_fast32_t sim_time) const {
       if (!map->contains(action)) {
         map->insert(std::pair<std::shared_ptr<Behaviour>, double_t>(action, 0.0));
       }
-      map->insert(std::pair<std::shared_ptr<Behaviour>, double_t>(action, map->at(action) * w));
+      map->insert(std::pair<std::shared_ptr<Behaviour>, double_t>(action, map->at(action) + w));
     }
   }
 
@@ -142,8 +142,8 @@ Agent::get_actions_of_friends(uint_fast32_t sim_time) const {
 double_t
 Agent::pressure(const std::shared_ptr<Belief> &b,
                 const std::unordered_map<std::shared_ptr<Behaviour>, double_t>
-                    &actions_of_friends) {
-  const uint_fast32_t size = actions_of_friends.size();
+                    &actions_of_friends) const {
+  const uint_fast32_t size = this->friends_.size();
 
   if (size == 0) {
     return 0.0;
@@ -162,7 +162,7 @@ double_t Agent::activation_change(
     const std::vector<std::shared_ptr<Belief>> &beliefs,
     const std::unordered_map<std::shared_ptr<Behaviour>, double_t>
         &actions_of_friends) const {
-  double_t pressure = contagent::Agent::pressure(belief, actions_of_friends);
+  double_t pressure = this->pressure(belief, actions_of_friends);
 
   if (pressure > 0.0) {
     return (1.0 + this->contextualize(sim_time, belief, beliefs)) / 2.0 *
