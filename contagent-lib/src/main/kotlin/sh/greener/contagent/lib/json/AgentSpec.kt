@@ -9,5 +9,6 @@ data class AgentSpec(
     val activations: List<Map<String, Double>>,
     val deltas: Map<String, Double>,
     val friends: Map<String, Double>,
-    val performanceRelationships: Map<String, Map<String, Double>>
+    val performanceRelationships: Map<String, Map<String, Double>>,
+    val interventionAgent: Boolean?
 )

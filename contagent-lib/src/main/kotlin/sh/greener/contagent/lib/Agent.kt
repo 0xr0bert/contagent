@@ -10,7 +10,7 @@ import kotlin.random.Random
 class Agent(
     override val uuid: UUID, val activations: MutableList<MutableMap<Belief, Double>>,
     val friends: MutableMap<Agent, Double>, val actions: MutableList<Behaviour>, val deltas: Map<Belief, Double>,
-    val performanceRelationships: Map<Belief, Map<Behaviour, Double>>
+    val performanceRelationships: Map<Belief, Map<Behaviour, Double>>, val interventionAgent: Boolean
 ) : UUIDd {
     constructor(spec: AgentSpec, behavioursByUuid: Map<String, Behaviour>, beliefsByUuid: Map<String, Belief>): this(
         UUID.fromString(spec.uuid),
@@ -22,7 +22,8 @@ class Agent(
             spec.performanceRelationships
                 .map { Pair(beliefsByUuid[it.key]!!, HashMap(it.value.mapKeys { behaviourUuid -> behavioursByUuid[behaviourUuid.key]!! })) }
                 .toMap()
-        )
+        ),
+        spec.interventionAgent == true
     )
 
 
@@ -105,36 +106,41 @@ class Agent(
     }
 
     fun performAction(simTime: Int, behaviours: Collection<Behaviour>, beliefs: Collection<Belief>, rng: Random) {
-        val unnormalizedProbabilities: List<Pair<Behaviour, Double>> = behaviours.map { behaviour ->
-            Pair(behaviour, beliefs
-                .sumOf { belief ->
-                    performanceRelationships[belief]!![behaviour]!! * (activations[simTime][belief]?: 0.0)
-                })
-        }
-
-        val sorted = unnormalizedProbabilities.sortedBy { (_, v) -> v }
-        val last = unnormalizedProbabilities.last()
-
-        if (last.second < 0.0) {
-            actions.add(simTime, last.first)
+        if (interventionAgent && simTime % 7 == 2) {
+            // Then perform cycling as Wednesday
+            behaviours.first { it.name == "Cycling" }.let { actions.add(simTime, it) }
         } else {
-            val filteredProbs = sorted.filter { it.second >= 0.0 }
-            if (filteredProbs.size == 1) {
-                actions.add(simTime, filteredProbs.first().first)
-            } else {
-                val normalizingFactor = filteredProbs.sumOf { it.second }
-                val normalizedProbs = filteredProbs.map { Pair(it.first, it.second / normalizingFactor)}
-                var chosenBehaviour = normalizedProbs.last().first
-                var rv = rng.nextDouble()
-                for (pair in normalizedProbs) {
-                    rv -= pair.second
-                    if (rv <= 0.0) {
-                        chosenBehaviour = pair.first
-                        break
-                    }
-                }
+            val unnormalizedProbabilities: List<Pair<Behaviour, Double>> = behaviours.map { behaviour ->
+                Pair(behaviour, beliefs
+                    .sumOf { belief ->
+                        performanceRelationships[belief]!![behaviour]!! * (activations[simTime][belief]?: 0.0)
+                    })
+            }
 
-                actions.add(simTime, chosenBehaviour)
+            val sorted = unnormalizedProbabilities.sortedBy { (_, v) -> v }
+            val last = unnormalizedProbabilities.last()
+
+            if (last.second < 0.0) {
+                actions.add(simTime, last.first)
+            } else {
+                val filteredProbs = sorted.filter { it.second >= 0.0 }
+                if (filteredProbs.size == 1) {
+                    actions.add(simTime, filteredProbs.first().first)
+                } else {
+                    val normalizingFactor = filteredProbs.sumOf { it.second }
+                    val normalizedProbs = filteredProbs.map { Pair(it.first, it.second / normalizingFactor)}
+                    var chosenBehaviour = normalizedProbs.last().first
+                    var rv = rng.nextDouble()
+                    for (pair in normalizedProbs) {
+                        rv -= pair.second
+                        if (rv <= 0.0) {
+                            chosenBehaviour = pair.first
+                            break
+                        }
+                    }
+
+                    actions.add(simTime, chosenBehaviour)
+                }
             }
         }
     }
@@ -150,7 +156,8 @@ class Agent(
                 entry.key.uuid.toString() to entry.value.mapKeysTo(HashMap()) {
                     it.key.uuid.toString()
                 }
-            }.toMap()
+            }.toMap(),
+            interventionAgent
         )
     }
 
