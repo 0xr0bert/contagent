@@ -108,7 +108,7 @@ class Agent(
     fun performAction(simTime: Int, behaviours: Collection<Behaviour>, beliefs: Collection<Belief>, rng: Random) {
         if (interventionAgent && simTime % 7 == 2) {
             // Then perform cycling as Wednesday
-            behaviours.first { it.name == "Cycling" }.let { actions.add(simTime, it) }
+            behaviours.first { it.name == "Cycle" }.let { actions.add(simTime, it) }
         } else {
             val unnormalizedProbabilities: List<Pair<Behaviour, Double>> = behaviours.map { behaviour ->
                 Pair(behaviour, beliefs
